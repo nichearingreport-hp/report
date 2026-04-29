@@ -482,29 +482,46 @@
   }
   .count-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
+  }
+  /* タブレット縦・大型スマホ：3列 */
+  @media (min-width: 600px) {
+    .count-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  /* PC・横画面：4列 */
+  @media (min-width: 900px) {
+    .count-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
   .count-item {
     background: var(--beige-light);
     border-radius: 6px;
-    padding: 8px 10px;
+    padding: 8px 8px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     border: 1px solid transparent;
     transition: border-color 0.2s;
+    min-width: 0;
+    overflow: hidden;
   }
   .count-item:focus-within {
     border-color: var(--turquoise);
     background: var(--white);
   }
   .count-item label {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--navy);
-    font-weight: 500;
+    font-weight: 600;
     flex: 1;
     min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .count-item .num-stepper {
     display: flex;
@@ -520,9 +537,9 @@
     background: var(--turquoise-light);
     border: none;
     color: var(--navy);
-    width: 30px;
-    height: 32px;
-    font-size: 18px;
+    width: 26px;
+    height: 30px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
     display: flex;
@@ -532,13 +549,14 @@
     transition: background 0.15s;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    flex-shrink: 0;
   }
   .count-item .stepper-btn:hover { background: var(--turquoise); color: var(--white); }
   .count-item .stepper-btn:active { background: var(--navy); color: var(--white); }
   .count-item .stepper-btn.minus { border-right: 1px solid var(--gray); }
   .count-item .stepper-btn.plus { border-left: 1px solid var(--gray); }
   .count-item input {
-    width: 38px;
+    width: 32px;
     text-align: center;
     font-size: 15px;
     font-weight: 700;
@@ -546,9 +564,11 @@
     border: none;
     background: transparent;
     font-family: inherit;
-    height: 32px;
+    height: 30px;
     -moz-appearance: textfield;
     appearance: textfield;
+    padding: 0;
+    min-width: 0;
   }
   .count-item input::-webkit-outer-spin-button,
   .count-item input::-webkit-inner-spin-button {
@@ -1275,7 +1295,7 @@
           <div class="count-item"><label>相談会</label><div class="num-stepper"><button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button><input type="number" data-area="seikyo" data-cat="shinki" data-key="seikyo-soudan" value="0" inputmode="numeric"><button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button></div></div>
           <div class="count-item"><label>返信</label><div class="num-stepper"><button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button><input type="number" data-area="seikyo" data-cat="shinki" data-key="seikyo-henshin" value="0" inputmode="numeric"><button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button></div></div>
           <div class="count-item"><label>問合</label><div class="num-stepper"><button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button><input type="number" data-area="seikyo" data-cat="shinki" data-key="seikyo-toiawase" value="0" inputmode="numeric"><button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button></div></div>
-          <div class="count-item"><label id="seikyo-jsho-label">生協紹</label><input type="number" data-area="seikyo" data-cat="shinki" data-key="seikyo-jsho" value="0" inputmode="numeric"></div>
+          <div class="count-item"><label id="seikyo-jsho-label">生紹</label><div class="num-stepper"><button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button><input type="number" data-area="seikyo" data-cat="shinki" data-key="seikyo-jsho" value="0" inputmode="numeric"><button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button></div></div>
           <div class="count-item"><label>客紹</label><div class="num-stepper"><button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button><input type="number" data-area="seikyo" data-cat="shinki" data-key="seikyo-kakusho" value="0" inputmode="numeric"><button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button></div></div>
           <div class="count-item"><label>追買</label><div class="num-stepper"><button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button><input type="number" data-area="seikyo" data-cat="repeat" data-key="seikyo-tsuikai" value="1" inputmode="numeric"><button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button></div></div>
           <div class="count-item"><label>SO</label><div class="num-stepper"><button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button><input type="number" data-area="seikyo" data-cat="other" data-key="seikyo-so" value="0" inputmode="numeric"><button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button></div></div>
