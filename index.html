@@ -485,14 +485,8 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
-  /* タブレット縦・大型スマホ：3列 */
+  /* タブレット・PC：4列（8項目が2行で収まる） */
   @media (min-width: 600px) {
-    .count-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  /* PC・横画面：4列 */
-  @media (min-width: 900px) {
     .count-grid {
       grid-template-columns: repeat(4, 1fr);
     }
@@ -503,25 +497,21 @@
     padding: 8px 8px;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     border: 1px solid transparent;
     transition: border-color 0.2s;
     min-width: 0;
-    overflow: hidden;
   }
   .count-item:focus-within {
     border-color: var(--turquoise);
     background: var(--white);
   }
   .count-item label {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--navy);
     font-weight: 600;
-    flex: 1;
-    min-width: 0;
+    flex-shrink: 0;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   .count-item .num-stepper {
     display: flex;
@@ -819,6 +809,38 @@
     justify-content: center;
   }
   .list-item .delete-btn:hover { border-color: var(--fuchsia); color: var(--fuchsia); }
+  .sub-breakdown {
+    color: var(--fuchsia);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+    padding: 4px 4px 8px;
+    letter-spacing: 0.02em;
+  }
+  .list-item .list-dropdown {
+    background: var(--white);
+    border: 1px solid var(--gray);
+    border-radius: 4px;
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: 600;
+    font-family: inherit;
+    padding: 2px 14px 2px 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 10 6'%3e%3cpath fill='%23203764' d='M5 6L0 0h10z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 3px center;
+    min-width: 60px;
+    max-width: 80px;
+  }
+  .list-item .list-dropdown:focus {
+    outline: none;
+    border-color: var(--turquoise);
+  }
 
   /* 相談会専用アイテム */
   .meet-item {
@@ -1214,10 +1236,6 @@
     z-index: 300;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
-
-  @media (min-width: 600px) {
-    .count-grid { grid-template-columns: repeat(6, 1fr); }
-  }
 </style>
 </head>
 <body>
@@ -1373,6 +1391,7 @@
           <span class="line2">※入力時に自動で色付けされます（契約/成約→薄ピンク、アウト/SO→薄グレー）</span>
         </div>
       </div>
+      <div class="sub-breakdown" id="breakdown-raijo">（内サポAPO　0件）</div>
       <div id="raijo-pref-blocks"></div>
       <button class="add-pref-btn" onclick="addPrefBlock('raijo')">＋ 県を追加</button>
 
@@ -1430,6 +1449,7 @@
           <div class="count-badge"><span class="num" id="badge-respJ">0</span>件</div>
         </div>
         <div class="sub-section-body">
+          <div class="sub-breakdown" id="breakdown-respJ">（JA紹介0件、客紹介0件）</div>
           <div id="respJ-pref-blocks"></div>
           <button class="add-pref-btn" onclick="addPrefBlock('respJ')">＋ 県を追加</button>
         </div>
@@ -1437,10 +1457,11 @@
 
       <div class="sub-section collapsed" id="sub-respS">
         <div class="sub-section-header" onclick="toggleSubSection('sub-respS')">
-          <h3>JA新規---SP紹介・担当者紹介・ほか</h3>
+          <h3>JA新規---SP紹介・担当者紹介・他</h3>
           <div class="count-badge"><span class="num" id="badge-respS">0</span>件</div>
         </div>
         <div class="sub-section-body">
+          <div class="sub-breakdown" id="breakdown-respS">（SP紹介0件、担当者紹介0件、他0件）</div>
           <div id="respS-pref-blocks"></div>
           <button class="add-pref-btn" onclick="addPrefBlock('respS')">＋ 県を追加</button>
         </div>
@@ -1487,10 +1508,11 @@
 
       <div class="sub-section collapsed" id="sub-srespJ">
         <div class="sub-section-header" onclick="toggleSubSection('sub-srespJ')">
-          <h3>生協新規---生協紹・客紹介</h3>
+          <h3>生協新規---生協紹介・客紹介</h3>
           <div class="count-badge"><span class="num" id="badge-srespJ">0</span>件</div>
         </div>
         <div class="sub-section-body">
+          <div class="sub-breakdown" id="breakdown-srespJ">（生協紹介0件、客紹介0件）</div>
           <div id="srespJ-list"></div>
           <button class="add-btn" onclick="addItemToList('srespJ-list', true)">＋ 案件を追加</button>
         </div>
@@ -1498,10 +1520,11 @@
 
       <div class="sub-section collapsed" id="sub-srespS">
         <div class="sub-section-header" onclick="toggleSubSection('sub-srespS')">
-          <h3>生協新規---SP紹介・担当者紹介・ほか</h3>
+          <h3>生協新規---SP紹介・担当者紹介・他</h3>
           <div class="count-badge"><span class="num" id="badge-srespS">0</span>件</div>
         </div>
         <div class="sub-section-body">
+          <div class="sub-breakdown" id="breakdown-srespS">（SP紹介0件、担当者紹介0件、他0件）</div>
           <div id="srespS-list"></div>
           <button class="add-btn" onclick="addItemToList('srespS-list', true)">＋ 案件を追加</button>
         </div>
@@ -1874,11 +1897,46 @@
   }
 
   // ===== リスト項目 =====
-  function createListItem(text = "", type = "", showSeq = true) {
+  // カテゴリ別のプルダウン定義
+  const LIST_CATEGORY_DROPDOWNS = {
+    raijo: [
+      { name: "venue", options: ["", "サポ会場"] },
+      { name: "apo", options: ["", "サポAPO"] }
+    ],
+    jaSyokai: [
+      { name: "kind", options: ["JA紹介", "客紹介"] }
+    ],
+    seikyoSyokai: [
+      { name: "kind", options: ["生協紹", "客紹介"] }
+    ],
+    jaSP: [
+      { name: "kind", options: ["SP紹", "担当紹", "他"] }
+    ],
+    seikyoSP: [
+      { name: "kind", options: ["SP紹", "担当紹", "他"] }
+    ]
+  };
+
+  function createListItem(text = "", type = "", showSeq = true, category = "", dropdownValues = {}) {
     const div = document.createElement("div");
     div.className = "list-item" + (type ? " " + type : "");
+    if (category) div.dataset.category = category;
+
+    // プルダウン部分のHTML
+    let dropdownsHtml = "";
+    const dropdowns = LIST_CATEGORY_DROPDOWNS[category] || [];
+    dropdowns.forEach(dd => {
+      const selected = dropdownValues[dd.name] || dd.options[0];
+      dropdownsHtml += `<select class="list-dropdown" data-name="${dd.name}">`;
+      dd.options.forEach(opt => {
+        dropdownsHtml += `<option value="${opt}"${opt === selected ? " selected" : ""}>${opt || "—"}</option>`;
+      });
+      dropdownsHtml += `</select>`;
+    });
+
     div.innerHTML = `
       ${showSeq ? '<span class="seq-num"></span>' : ''}
+      ${dropdownsHtml}
       <textarea>${text}</textarea>
       <button class="delete-btn" onclick="removeListItem(this)">×</button>
     `;
@@ -1899,6 +1957,12 @@
       renumberAll();
       updateAllCounts();
     });
+    // プルダウン変更で再集計
+    div.querySelectorAll(".list-dropdown").forEach(sel => {
+      sel.addEventListener("change", () => {
+        updateAllCounts();
+      });
+    });
     setTimeout(() => {
       textarea.style.height = "auto";
       textarea.style.height = (textarea.scrollHeight) + "px";
@@ -1912,9 +1976,18 @@
     updateAllCounts();
   }
 
+  // listId からカテゴリを判定
+  function getCategoryByListId(listId) {
+    if (listId === "raijo-seikyo-list") return "raijo";
+    if (listId === "srespJ-list") return "seikyoSyokai";
+    if (listId === "srespS-list") return "seikyoSP";
+    return "";
+  }
+
   function addItemToList(listId, showSeq = true) {
     const list = document.getElementById(listId);
-    const item = createListItem("", "", showSeq);
+    const category = getCategoryByListId(listId);
+    const item = createListItem("", "", showSeq, category, {});
     list.appendChild(item);
     item.querySelector("textarea").focus();
     renumberAll();
@@ -1974,6 +2047,14 @@
   }
 
   // ===== 県別ブロック =====
+  // sectionType からカテゴリを判定
+  function getCategoryBySectionType(sectionType) {
+    if (sectionType === "raijo") return "raijo";
+    if (sectionType === "respJ") return "jaSyokai";
+    if (sectionType === "respS") return "jaSP";
+    return "";
+  }
+
   function addPrefBlock(sectionType, defaultPref = null, items = []) {
     const container = document.getElementById(`${sectionType}-pref-blocks`);
     const usedPrefs = Array.from(container.querySelectorAll(".pref-select")).map(s => s.value);
@@ -1984,6 +2065,7 @@
     const blockId = `${sectionType}-pref-${Date.now()}-${Math.floor(Math.random()*1000)}`;
     const isMeet = sectionType === "meet";
     const showSeq = !isMeet;
+    const category = getCategoryBySectionType(sectionType);
 
     const block = document.createElement("div");
     block.className = "list-area";
@@ -2013,9 +2095,9 @@
         list.appendChild(createMeetItem(item));
       } else {
         if (typeof item === "string") {
-          list.appendChild(createListItem(item, "", showSeq));
+          list.appendChild(createListItem(item, "", showSeq, category, {}));
         } else {
-          list.appendChild(createListItem(item.text, item.type, showSeq));
+          list.appendChild(createListItem(item.text, item.type, showSeq, category, item.dropdownValues || {}));
         }
       }
     });
@@ -2026,7 +2108,7 @@
         list.appendChild(newItem);
         newItem.querySelector(".meet-date").focus();
       } else {
-        const newItem = createListItem("", "", showSeq);
+        const newItem = createListItem("", "", showSeq, category, {});
         list.appendChild(newItem);
         newItem.querySelector("textarea").focus();
       }
@@ -2214,9 +2296,89 @@
     });
     document.getElementById("badge-sresp").textContent = srespTotal;
 
+    // ===== 各セクション内訳の集計（プルダウン値による） =====
+    // breakdown-respJ: JA紹介・客紹介
+    countDropdownBreakdown("respJ", "kind", ["JA紹介", "客紹介"], "breakdown-respJ");
+    // breakdown-respS: SP紹・担当紹・他
+    countDropdownBreakdown("respS", "kind", ["SP紹", "担当紹", "他"], "breakdown-respS",
+      ["SP紹介", "担当者紹介", "他"]);
+    // breakdown-srespJ: 生協紹・客紹介
+    countDropdownBreakdownList("srespJ-list", "kind", ["生協紹", "客紹介"], "breakdown-srespJ",
+      ["生協紹介", "客紹介"]);
+    // breakdown-srespS: SP紹・担当紹・他
+    countDropdownBreakdownList("srespS-list", "kind", ["SP紹", "担当紹", "他"], "breakdown-srespS",
+      ["SP紹介", "担当者紹介", "他"]);
+    // breakdown-raijo: 内サポAPO
+    countRaijoBreakdown();
+
     const stockCount = Array.from(document.querySelectorAll("#stock-list input"))
       .filter(i => i.value.trim().length > 0).length;
     document.getElementById("badge-stock").textContent = stockCount;
+  }
+
+  // 県別ブロックを横断してプルダウン値ごとの件数を集計
+  function countDropdownBreakdown(sectionType, ddName, options, breakdownId, displayLabels) {
+    const counts = {};
+    options.forEach(o => counts[o] = 0);
+    const container = document.getElementById(`${sectionType}-pref-blocks`);
+    if (container) {
+      container.querySelectorAll(".list-item").forEach(item => {
+        const ta = item.querySelector("textarea");
+        if (!ta || !ta.value.trim()) return;
+        const sel = item.querySelector(`select[data-name="${ddName}"]`);
+        if (sel && counts[sel.value] !== undefined) counts[sel.value]++;
+      });
+    }
+    const labels = displayLabels || options;
+    const text = "（" + options.map((o, i) => `${labels[i]}${counts[o]}件`).join("、") + "）";
+    const el = document.getElementById(breakdownId);
+    if (el) el.textContent = text;
+  }
+
+  // 単独リストでプルダウン値ごとの件数を集計
+  function countDropdownBreakdownList(listId, ddName, options, breakdownId, displayLabels) {
+    const counts = {};
+    options.forEach(o => counts[o] = 0);
+    const list = document.getElementById(listId);
+    if (list) {
+      list.querySelectorAll(".list-item").forEach(item => {
+        const ta = item.querySelector("textarea");
+        if (!ta || !ta.value.trim()) return;
+        const sel = item.querySelector(`select[data-name="${ddName}"]`);
+        if (sel && counts[sel.value] !== undefined) counts[sel.value]++;
+      });
+    }
+    const labels = displayLabels || options;
+    const text = "（" + options.map((o, i) => `${labels[i]}${counts[o]}件`).join("、") + "）";
+    const el = document.getElementById(breakdownId);
+    if (el) el.textContent = text;
+  }
+
+  // 新規来場：内サポAPO件数の集計
+  function countRaijoBreakdown() {
+    let supportApo = 0;
+    // 県別ブロック
+    const container = document.getElementById("raijo-pref-blocks");
+    if (container) {
+      container.querySelectorAll(".list-item").forEach(item => {
+        const ta = item.querySelector("textarea");
+        if (!ta || !ta.value.trim()) return;
+        const apoSel = item.querySelector('select[data-name="apo"]');
+        if (apoSel && apoSel.value === "サポAPO") supportApo++;
+      });
+    }
+    // 生協リスト
+    const seikyoList = document.getElementById("raijo-seikyo-list");
+    if (seikyoList) {
+      seikyoList.querySelectorAll(".list-item").forEach(item => {
+        const ta = item.querySelector("textarea");
+        if (!ta || !ta.value.trim()) return;
+        const apoSel = item.querySelector('select[data-name="apo"]');
+        if (apoSel && apoSel.value === "サポAPO") supportApo++;
+      });
+    }
+    const el = document.getElementById("breakdown-raijo");
+    if (el) el.textContent = `（内サポAPO　${supportApo}件）`;
   }
 
   function addStock(text = "") {
@@ -2299,7 +2461,7 @@
       (prev.raijo.seikyo || []).forEach(line => {
         const list = document.getElementById("raijo-seikyo-list");
         const item = parseListLine(line);
-        list.appendChild(createListItem(item.text, item.type, true));
+        list.appendChild(createListItem(item.text, item.type, true, "raijo", {}));
       });
     }
 
@@ -2320,9 +2482,12 @@
         const arr = prev.respSeikyo[key] || [];
         const list = document.getElementById(`${key}-list`);
         if (list) {
+          // カテゴリ判定
+          const category = key === "srespJ" ? "seikyoSyokai" :
+                           key === "srespS" ? "seikyoSP" : "";
           arr.forEach(line => {
             const item = parseListLine(line);
-            list.appendChild(createListItem(item.text, item.type, true));
+            list.appendChild(createListItem(item.text, item.type, true, category, {}));
           });
         }
       });
@@ -2490,6 +2655,19 @@
     const nextFree = v("next-free").trim();
     report += nextFree ? nextFree + "\n\n" : "（記入なし）\n\n";
 
+    // プルダウン値を本文に組み込むヘルパー
+    const formatItemText = (item, txt) => {
+      const dropdowns = item.querySelectorAll(".list-dropdown");
+      if (dropdowns.length === 0) return txt;
+      const tags = [];
+      dropdowns.forEach(sel => {
+        const v = sel.value.trim();
+        if (v) tags.push(v);
+      });
+      if (tags.length === 0) return txt;
+      return `[${tags.join("/")}] ${txt}`;
+    };
+
     const collectPrefBlocks = (sectionType) => {
       const result = [];
       const container = document.getElementById(`${sectionType}-pref-blocks`);
@@ -2502,8 +2680,9 @@
             const seq = seqEl ? seqEl.textContent : "";
             const txt = item.querySelector("textarea").value.trim();
             if (!txt) return null;
-            if (txt.startsWith("※")) return txt;
-            return seq ? `${seq} ${txt}` : txt;
+            if (txt.startsWith("※")) return formatItemText(item, txt);
+            const formatted = formatItemText(item, txt);
+            return seq ? `${seq} ${formatted}` : formatted;
           }).filter(t => t);
         if (items.length > 0) result.push({ pref, items });
       });
@@ -2561,8 +2740,9 @@
           const seq = seqEl ? seqEl.textContent : "";
           const txt = item.querySelector("textarea").value.trim();
           if (!txt) return null;
-          if (txt.startsWith("※")) return txt;
-          return seq ? `${seq} ${txt}` : txt;
+          if (txt.startsWith("※")) return formatItemText(item, txt);
+          const formatted = formatItemText(item, txt);
+          return seq ? `${seq} ${formatted}` : formatted;
         }).filter(t => t);
     };
 
@@ -2585,7 +2765,8 @@
     report += "\n";
 
     // 新規来場
-    report += "【新規---来場】\n";
+    const raijoBreakdown = (document.getElementById("breakdown-raijo") || {}).textContent || "";
+    report += "【新規---来場】" + raijoBreakdown + "\n";
     report += "─────────────────────\n";
     const raijoData = collectPrefBlocks("raijo");
     raijoData.forEach(({pref, items}) => {
@@ -2603,15 +2784,16 @@
     report += "【JA《新規》---返信・問合・紹介・他】\n";
     report += "─────────────────────\n";
     const respSubs = [
-      { type: "respH", title: "■ JA新規---返信" },
-      { type: "respT", title: "■ JA新規---問合" },
-      { type: "respJ", title: "■ JA新規---JA紹介・客紹介" },
-      { type: "respS", title: "■ JA新規---SP紹介・担当者紹介・ほか" }
+      { type: "respH", title: "■ JA新規---返信", breakdownId: null },
+      { type: "respT", title: "■ JA新規---問合", breakdownId: null },
+      { type: "respJ", title: "■ JA新規---JA紹介・客紹介", breakdownId: "breakdown-respJ" },
+      { type: "respS", title: "■ JA新規---SP紹介・担当者紹介・他", breakdownId: "breakdown-respS" }
     ];
     respSubs.forEach(sub => {
       const data = collectPrefBlocks(sub.type);
       if (data.length === 0) return;
-      report += `${sub.title}\n`;
+      const breakdown = sub.breakdownId ? ((document.getElementById(sub.breakdownId) || {}).textContent || "") : "";
+      report += `${sub.title}${breakdown}\n`;
       data.forEach(({pref, items}) => {
         report += `《${pref}》\n`;
         items.forEach(t => report += `${t}\n`);
@@ -2623,15 +2805,16 @@
     report += "【生協《新規》---返信・問合・紹介・他】\n";
     report += "─────────────────────\n";
     const srespSubs2 = [
-      { id: "srespH-list", title: "■ 生協新規---返信" },
-      { id: "srespT-list", title: "■ 生協新規---問合" },
-      { id: "srespJ-list", title: "■ 生協新規---生協紹・客紹介" },
-      { id: "srespS-list", title: "■ 生協新規---SP紹介・担当者紹介・ほか" }
+      { id: "srespH-list", title: "■ 生協新規---返信", breakdownId: null },
+      { id: "srespT-list", title: "■ 生協新規---問合", breakdownId: null },
+      { id: "srespJ-list", title: "■ 生協新規---生協紹介・客紹介", breakdownId: "breakdown-srespJ" },
+      { id: "srespS-list", title: "■ 生協新規---SP紹介・担当者紹介・他", breakdownId: "breakdown-srespS" }
     ];
     srespSubs2.forEach(sub => {
       const items = collectList(sub.id);
       if (items.length === 0) return;
-      report += `${sub.title}\n`;
+      const breakdown = sub.breakdownId ? ((document.getElementById(sub.breakdownId) || {}).textContent || "") : "";
+      report += `${sub.title}${breakdown}\n`;
       items.forEach(t => report += `${t}\n`);
       report += "\n";
     });
@@ -2707,6 +2890,19 @@
       .forEach(it => meet.seikyo.push(it));
 
     // 県別ブロック収集ヘルパー（共通）
+    // プルダウン値を本文に組み込むヘルパー
+    const formatItemText = (item, txt) => {
+      const dropdowns = item.querySelectorAll(".list-dropdown");
+      if (dropdowns.length === 0) return txt;
+      const tags = [];
+      dropdowns.forEach(sel => {
+        const v = sel.value.trim();
+        if (v) tags.push(v);
+      });
+      if (tags.length === 0) return txt;
+      return `[${tags.join("/")}] ${txt}`;
+    };
+
     const collectPrefBlocksRaw = (sectionType) => {
       const result = [];
       const container = document.getElementById(`${sectionType}-pref-blocks`);
@@ -2719,8 +2915,9 @@
             const seq = seqEl ? seqEl.textContent : "";
             const txt = item.querySelector("textarea").value.trim();
             if (!txt) return null;
-            if (txt.startsWith("※")) return txt;
-            return seq ? `${seq} ${txt}` : txt;
+            if (txt.startsWith("※")) return formatItemText(item, txt);
+            const formatted = formatItemText(item, txt);
+            return seq ? `${seq} ${formatted}` : formatted;
           }).filter(t => t);
         if (items.length > 0) result.push({ pref, items });
       });
@@ -2735,8 +2932,9 @@
           const seq = seqEl ? seqEl.textContent : "";
           const txt = item.querySelector("textarea").value.trim();
           if (!txt) return null;
-          if (txt.startsWith("※")) return txt;
-          return seq ? `${seq} ${txt}` : txt;
+          if (txt.startsWith("※")) return formatItemText(item, txt);
+          const formatted = formatItemText(item, txt);
+          return seq ? `${seq} ${formatted}` : formatted;
         }).filter(t => t);
     };
 
