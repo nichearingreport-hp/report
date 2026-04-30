@@ -2816,16 +2816,17 @@
     const meetTotal = parseInt(document.getElementById("badge-meet").textContent) || 0;
     const meetShinki = parseInt(document.getElementById("badge-meet-shinki").textContent) || 0;
     const meetKou = parseInt(document.getElementById("badge-meet-koukyaku").textContent) || 0;
-    report += `【今月の相談会】 ${meetTotal}会場 / 新規 ${meetShinki}名・顧客 ${meetKou}名\n`;
+    const meetSupport = parseInt((document.getElementById("badge-meet-support") || {}).textContent || "0") || 0;
+    report += `【今月の相談会】 ${meetTotal}会場（内サポ会場 ${meetSupport}） / 新規 ${meetShinki}名・顧客 ${meetKou}名\n`;
     report += "─────────────────────\n";
     const meetData = collectMeetBlocks("meet");
-    meetData.forEach(({pref, items}) => {
-      report += `《${pref}》\n`;
+    meetData.forEach(({pref, items, totalShinki, totalKou}) => {
+      report += `《${pref}》　${items.length}会場 新規${totalShinki}名・顧客${totalKou}名\n`;
       items.forEach(t => report += `${t}\n`);
     });
     const meetSeikyo = collectMeetSeikyo("meet-seikyo-list");
     if (meetSeikyo) {
-      report += `《生協》会場\n`;
+      report += `《生協》会場　${meetSeikyo.items.length}会場 新規${meetSeikyo.totalShinki}名・顧客${meetSeikyo.totalKou}名\n`;
       meetSeikyo.items.forEach(t => report += `${t}\n`);
     }
     report += "\n";
