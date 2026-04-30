@@ -225,12 +225,13 @@
   }
   .recipient-item .delete-btn {
     background: transparent;
-    border: 1px solid var(--gray);
-    color: var(--gray);
+    border: 1.5px solid #999;
+    color: #666;
     width: 30px;
     height: 30px;
     border-radius: 50%;
     font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
     flex-shrink: 0;
   }
@@ -629,12 +630,13 @@
   }
   .today-sub-item .delete-btn {
     background: transparent;
-    border: 1px solid var(--gray);
-    color: var(--gray);
+    border: 1.5px solid #999;
+    color: #666;
     width: 22px;
     height: 22px;
     border-radius: 50%;
     font-size: 12px;
+    font-weight: 700;
     cursor: pointer;
     flex-shrink: 0;
     margin-top: 7px;
@@ -746,12 +748,13 @@
   }
   .pref-remove-btn {
     background: transparent;
-    border: 1px solid var(--gray);
-    color: var(--gray);
+    border: 1.5px solid #999;
+    color: #666;
     width: 22px;
     height: 22px;
     border-radius: 50%;
     font-size: 12px;
+    font-weight: 700;
     cursor: pointer;
   }
   .pref-remove-btn:hover { border-color: var(--fuchsia); color: var(--fuchsia); }
@@ -812,12 +815,13 @@
   }
   .list-item .delete-btn {
     background: transparent;
-    border: 1px solid var(--gray);
-    color: var(--gray);
+    border: 1.5px solid #999;
+    color: #666;
     width: 24px;
     height: 24px;
     border-radius: 50%;
     font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
     flex-shrink: 0;
     display: flex;
@@ -968,12 +972,13 @@
   }
   .meet-item .delete-btn {
     background: transparent;
-    border: 1px solid var(--gray);
-    color: var(--gray);
+    border: 1.5px solid #999;
+    color: #666;
     width: 24px;
     height: 24px;
     border-radius: 50%;
     font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
     flex-shrink: 0;
   }
@@ -1110,12 +1115,13 @@
   }
   .stock-item .delete-btn {
     background: transparent;
-    border: 1px solid var(--gray);
-    color: var(--gray);
+    border: 1.5px solid #999;
+    color: #666;
     width: 24px;
     height: 24px;
     border-radius: 50%;
     font-size: 14px;
+    font-weight: 700;
     cursor: pointer;
     flex-shrink: 0;
   }
@@ -1384,7 +1390,7 @@
 
       <div class="list-area" style="margin-top: 12px;">
         <div class="list-area-title">
-          <span>《生協》</span>
+          <span>《生協》会場</span>
           <span class="sub-count meet-count" id="cnt-meet-seikyo">0会場</span>
         </div>
         <div id="meet-seikyo-list"></div>
@@ -2120,7 +2126,7 @@
     block.dataset.blockId = blockId;
     const labelText = isMeet ? '相談会' : sectionType === 'raijo' ? '来場記録' : '案件';
     const subCountClass = isMeet ? 'sub-count meet-count' : 'sub-count';
-    const subCountText = isMeet ? '0会場' : '0件';
+    const subCountText = isMeet ? '0会場 新規0名・顧客0名' : '0件';
 
     block.innerHTML = `
       <div class="list-area-title">
@@ -2279,7 +2285,7 @@
       meetContainer.querySelectorAll(".list-area").forEach(block => {
         const list = block.querySelector(".pref-list");
         const r = countMeetItems(list);
-        block.querySelector(".sub-count").textContent = `${r.count}会場`;
+        block.querySelector(".sub-count").textContent = `${r.count}会場 新規${r.shinki}名・顧客${r.koukyaku}名`;
         meetCount += r.count;
         meetShinki += r.shinki;
         meetKoukyaku += r.koukyaku;
@@ -2289,7 +2295,7 @@
     const meetSeikyoList = document.getElementById("meet-seikyo-list");
     if (meetSeikyoList) {
       const r = countMeetItems(meetSeikyoList);
-      document.getElementById("cnt-meet-seikyo").textContent = `${r.count}会場`;
+      document.getElementById("cnt-meet-seikyo").textContent = `${r.count}会場 新規${r.shinki}名・顧客${r.koukyaku}名`;
       meetCount += r.count;
       meetShinki += r.shinki;
       meetKoukyaku += r.koukyaku;
@@ -2819,7 +2825,7 @@
     });
     const meetSeikyo = collectMeetSeikyo("meet-seikyo-list");
     if (meetSeikyo) {
-      report += `《生協》\n`;
+      report += `《生協》会場\n`;
       meetSeikyo.items.forEach(t => report += `${t}\n`);
     }
     report += "\n";
