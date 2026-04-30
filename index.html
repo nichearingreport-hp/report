@@ -336,6 +336,12 @@
   .meet-badge-group .badge-koukyaku {
     background: var(--orange);
   }
+  .meet-support-badge {
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 4px;
+    opacity: 0.95;
+  }
 
   .inherit-badge {
     background: var(--fuchsia);
@@ -793,6 +799,16 @@
     outline: none;
     background: var(--white);
     border-radius: 4px;
+  }
+  .list-item textarea::placeholder {
+    color: rgba(32, 55, 100, 0.4);
+    font-size: 11.5px;
+    font-style: italic;
+  }
+  .list-item textarea::-webkit-input-placeholder {
+    color: rgba(32, 55, 100, 0.4);
+    font-size: 11.5px;
+    font-style: italic;
   }
   .list-item .delete-btn {
     background: transparent;
@@ -1356,7 +1372,7 @@
     <div class="section-header" onclick="toggleSection('sec-meet')">
       <h2><span class="icon">▶</span>今月の相談会<span class="inherit-badge">前日引継</span></h2>
       <div class="meet-badge-group">
-        <div class="count-badge"><span class="num" id="badge-meet">0</span>会場</div>
+        <div class="count-badge"><span class="num" id="badge-meet">0</span>会場<span class="meet-support-badge">（内サポ会場　<span id="badge-meet-support">0</span>）</span></div>
         <div class="count-badge badge-shinki">新規<span class="num" id="badge-meet-shinki" style="margin: 0 2px;">0</span>名</div>
         <div class="count-badge badge-koukyaku">顧客<span class="num" id="badge-meet-koukyaku" style="margin: 0 2px;">0</span>名</div>
       </div>
@@ -1381,7 +1397,7 @@
   <section class="section collapsed" id="sec-raijo">
     <div class="section-header" onclick="toggleSection('sec-raijo')">
       <h2><span class="icon">▶</span>新規---来場<span class="inherit-badge">前日引継</span></h2>
-      <div class="count-badge"><span class="num" id="badge-raijo">0</span>件</div>
+      <div class="count-badge"><span class="num" id="badge-raijo">0</span>件<span class="meet-support-badge">（内サポAPO　<span id="badge-raijo-support">0</span>）</span></div>
       <span class="toggle">▼</span>
     </div>
     <div class="section-body">
@@ -1391,13 +1407,12 @@
           <span class="line2">※入力時に自動で色付けされます（契約/成約→薄ピンク、アウト/SO→薄グレー）</span>
         </div>
       </div>
-      <div class="sub-breakdown" id="breakdown-raijo">（内サポAPO　0件）</div>
       <div id="raijo-pref-blocks"></div>
       <button class="add-pref-btn" onclick="addPrefBlock('raijo')">＋ 県を追加</button>
 
       <div class="seikyo-block">
         <div class="seikyo-block-title">
-          <span>《生協》相談会</span>
+          <span>《生協》来場</span>
           <span class="sub-count" id="cnt-raijo-seikyo">0件</span>
         </div>
         <div id="raijo-seikyo-list"></div>
@@ -1903,11 +1918,15 @@
       { name: "venue", options: ["", "サポ会場"] },
       { name: "apo", options: ["", "サポAPO"] }
     ],
+    raijoSeikyo: [
+      { name: "venue", options: ["", "サポ会場"] },
+      { name: "apo", options: ["", "サポAPO"] }
+    ],
     jaSyokai: [
       { name: "kind", options: ["JA紹介", "客紹介"] }
     ],
     seikyoSyokai: [
-      { name: "kind", options: ["生協紹", "客紹介"] }
+      { name: "kind", options: ["客紹介", "生協紹"] }
     ],
     jaSP: [
       { name: "kind", options: ["SP紹", "担当紹", "他"] }
@@ -1915,6 +1934,18 @@
     seikyoSP: [
       { name: "kind", options: ["SP紹", "担当紹", "他"] }
     ]
+  };
+
+  // カテゴリ別のプレースホルダー（例文）
+  const LIST_CATEGORY_PLACEHOLDERS = {
+    raijo: "例：4/6 JAなごや南陽町 ○○様→4/10XF760両耳貸出→4/11~4/18成約",
+    raijoSeikyo: "例：4/6 コープあいち ○○様→4/10VI760両耳貸出→4/11~4/18成約",
+    jaSyokai: "例：4/6 JAなごや南陽町 ○○様→4/10XF960ITC両耳成約→4/18",
+    jaPlain: "例：4/6 JAなごや南陽町 ○○様→4/10XF960ITC両耳成約→4/18",
+    seikyoSyokai: "例：4/6 コープあいち ○○様→4/10VI760両耳成約→4/13",
+    seikyoPlain: "例：4/6 コープあいち ○○様→4/10VI760両耳成約→4/13",
+    jaSP: "例：4/6 JAなごや南陽町 ○○様→4/10XF960ITC両耳成約→4/18",
+    seikyoSP: "例：4/6 コープあいち ○○様→4/10VI760両耳成約→4/13"
   };
 
   function createListItem(text = "", type = "", showSeq = true, category = "", dropdownValues = {}) {
@@ -1934,10 +1965,13 @@
       dropdownsHtml += `</select>`;
     });
 
+    // プレースホルダー
+    const placeholder = LIST_CATEGORY_PLACEHOLDERS[category] || "";
+
     div.innerHTML = `
       ${showSeq ? '<span class="seq-num"></span>' : ''}
       ${dropdownsHtml}
-      <textarea>${text}</textarea>
+      <textarea placeholder="${placeholder}">${text}</textarea>
       <button class="delete-btn" onclick="removeListItem(this)">×</button>
     `;
     const textarea = div.querySelector("textarea");
@@ -1978,9 +2012,11 @@
 
   // listId からカテゴリを判定
   function getCategoryByListId(listId) {
-    if (listId === "raijo-seikyo-list") return "raijo";
+    if (listId === "raijo-seikyo-list") return "raijoSeikyo";
     if (listId === "srespJ-list") return "seikyoSyokai";
     if (listId === "srespS-list") return "seikyoSP";
+    // 生協返信・問合（プルダウン無しだがプレースホルダー用）
+    if (listId === "srespH-list" || listId === "srespT-list") return "seikyoPlain";
     return "";
   }
 
@@ -1995,13 +2031,19 @@
   }
 
   // ===== 相談会専用アイテム =====
-  function createMeetItem(data = {}) {
+  function createMeetItem(data = {}, isSeikyo = false) {
     const div = document.createElement("div");
     div.className = "meet-item";
+    const venueOpt = data.venueType || "";
+    const venuePlaceholder = isSeikyo ? "例：コープあいち○○○" : "例：JAなごや○○○";
     div.innerHTML = `
       <span class="seq-num"></span>
+      <select class="meet-venue-type list-dropdown" data-name="venueType">
+        <option value=""${venueOpt === "" ? " selected" : ""}>—</option>
+        <option value="サポ会場"${venueOpt === "サポ会場" ? " selected" : ""}>サポ会場</option>
+      </select>
       <input type="text" class="meet-date" placeholder="4/15" value="${data.date || ''}">
-      <input type="text" class="meet-venue" placeholder="例：JAなごや ○○支店" value="${data.venue || ''}">
+      <input type="text" class="meet-venue" placeholder="${venuePlaceholder}" value="${data.venue || ''}">
       <div class="meet-num-group">
         <span class="meet-num-label">新規</span>
         <div class="meet-stepper">
@@ -2028,6 +2070,9 @@
         updateAllCounts();
       });
     });
+    div.querySelector(".meet-venue-type").addEventListener("change", () => {
+      updateAllCounts();
+    });
     return div;
   }
 
@@ -2039,7 +2084,8 @@
 
   function addMeetItemToList(listId) {
     const list = document.getElementById(listId);
-    const item = createMeetItem({});
+    const isSeikyo = listId === "meet-seikyo-list";
+    const item = createMeetItem({}, isSeikyo);
     list.appendChild(item);
     item.querySelector(".meet-date").focus();
     renumberAll();
@@ -2052,6 +2098,8 @@
     if (sectionType === "raijo") return "raijo";
     if (sectionType === "respJ") return "jaSyokai";
     if (sectionType === "respS") return "jaSP";
+    // 返信・問合（プルダウン無しだがプレースホルダー用）
+    if (sectionType === "respH" || sectionType === "respT") return "jaPlain";
     return "";
   }
 
@@ -2179,18 +2227,20 @@
     }).length;
   }
   function countMeetItems(list) {
-    let count = 0, shinki = 0, koukyaku = 0;
+    let count = 0, shinki = 0, koukyaku = 0, support = 0;
     list.querySelectorAll(":scope > .meet-item").forEach(item => {
       const venue = item.querySelector(".meet-venue").value.trim();
       const sN = parseInt(item.querySelector(".meet-num.shinki").value) || 0;
       const kN = parseInt(item.querySelector(".meet-num.koukyaku").value) || 0;
+      const venueType = (item.querySelector(".meet-venue-type") || {}).value || "";
       if (venue.length > 0) {
         count++;
         shinki += sN;
         koukyaku += kN;
+        if (venueType === "サポ会場") support++;
       }
     });
-    return { count, shinki, koukyaku };
+    return { count, shinki, koukyaku, support };
   }
 
   function updateAllCounts() {
@@ -2223,7 +2273,7 @@
     document.getElementById("badge-count").textContent = grandTotal;
 
     // 相談会
-    let meetCount = 0, meetShinki = 0, meetKoukyaku = 0;
+    let meetCount = 0, meetShinki = 0, meetKoukyaku = 0, meetSupport = 0;
     const meetContainer = document.getElementById("meet-pref-blocks");
     if (meetContainer) {
       meetContainer.querySelectorAll(".list-area").forEach(block => {
@@ -2233,6 +2283,7 @@
         meetCount += r.count;
         meetShinki += r.shinki;
         meetKoukyaku += r.koukyaku;
+        meetSupport += r.support;
       });
     }
     const meetSeikyoList = document.getElementById("meet-seikyo-list");
@@ -2242,10 +2293,13 @@
       meetCount += r.count;
       meetShinki += r.shinki;
       meetKoukyaku += r.koukyaku;
+      meetSupport += r.support;
     }
     document.getElementById("badge-meet").textContent = meetCount;
     document.getElementById("badge-meet-shinki").textContent = meetShinki;
     document.getElementById("badge-meet-koukyaku").textContent = meetKoukyaku;
+    const supportEl = document.getElementById("badge-meet-support");
+    if (supportEl) supportEl.textContent = meetSupport;
 
     // 来場・JA新規
     const respSections = ["raijo", "respH", "respT", "respJ", "respS"];
@@ -2377,8 +2431,9 @@
         if (apoSel && apoSel.value === "サポAPO") supportApo++;
       });
     }
-    const el = document.getElementById("breakdown-raijo");
-    if (el) el.textContent = `（内サポAPO　${supportApo}件）`;
+    // ヘッダーバッジ
+    const badgeEl = document.getElementById("badge-raijo-support");
+    if (badgeEl) badgeEl.textContent = supportApo;
   }
 
   function addStock(text = "") {
@@ -2448,7 +2503,7 @@
       });
       (prev.meet.seikyo || []).forEach(it => {
         const list = document.getElementById("meet-seikyo-list");
-        list.appendChild(createMeetItem(it));
+        list.appendChild(createMeetItem(it, true));
       });
     }
 
@@ -2461,7 +2516,7 @@
       (prev.raijo.seikyo || []).forEach(line => {
         const list = document.getElementById("raijo-seikyo-list");
         const item = parseListLine(line);
-        list.appendChild(createListItem(item.text, item.type, true, "raijo", {}));
+        list.appendChild(createListItem(item.text, item.type, true, "raijoSeikyo", {}));
       });
     }
 
@@ -2484,7 +2539,8 @@
         if (list) {
           // カテゴリ判定
           const category = key === "srespJ" ? "seikyoSyokai" :
-                           key === "srespS" ? "seikyoSP" : "";
+                           key === "srespS" ? "seikyoSP" :
+                           "seikyoPlain";
           arr.forEach(line => {
             const item = parseListLine(line);
             list.appendChild(createListItem(item.text, item.type, true, category, {}));
@@ -2701,12 +2757,14 @@
             const seq = seqEl ? seqEl.textContent : "";
             const date = item.querySelector(".meet-date").value.trim();
             const venue = item.querySelector(".meet-venue").value.trim();
+            const venueType = (item.querySelector(".meet-venue-type") || {}).value || "";
             const sN = parseInt(item.querySelector(".meet-num.shinki").value) || 0;
             const kN = parseInt(item.querySelector(".meet-num.koukyaku").value) || 0;
             if (!venue) return null;
             totalShinki += sN;
             totalKou += kN;
-            return `${seq} ${date} ${venue}　(新規 ${sN}名、顧客 ${kN}名)`;
+            const tag = venueType ? `[${venueType}] ` : "";
+            return `${seq} ${tag}${date} ${venue}　(新規 ${sN}名、顧客 ${kN}名)`;
           }).filter(t => t);
         if (items.length > 0) result.push({ pref, items, totalShinki, totalKou });
       });
@@ -2722,12 +2780,14 @@
           const seq = seqEl ? seqEl.textContent : "";
           const date = item.querySelector(".meet-date").value.trim();
           const venue = item.querySelector(".meet-venue").value.trim();
+          const venueType = (item.querySelector(".meet-venue-type") || {}).value || "";
           const sN = parseInt(item.querySelector(".meet-num.shinki").value) || 0;
           const kN = parseInt(item.querySelector(".meet-num.koukyaku").value) || 0;
           if (!venue) return null;
           totalShinki += sN;
           totalKou += kN;
-          return `${seq} ${date} ${venue}　(新規 ${sN}名、顧客 ${kN}名)`;
+          const tag = venueType ? `[${venueType}] ` : "";
+          return `${seq} ${tag}${date} ${venue}　(新規 ${sN}名、顧客 ${kN}名)`;
         }).filter(t => t);
       return items.length > 0 ? { items, totalShinki, totalKou } : null;
     };
@@ -2765,7 +2825,8 @@
     report += "\n";
 
     // 新規来場
-    const raijoBreakdown = (document.getElementById("breakdown-raijo") || {}).textContent || "";
+    const raijoSupportNum = (document.getElementById("badge-raijo-support") || {}).textContent || "0";
+    const raijoBreakdown = `（内サポAPO　${raijoSupportNum}件）`;
     report += "【新規---来場】" + raijoBreakdown + "\n";
     report += "─────────────────────\n";
     const raijoData = collectPrefBlocks("raijo");
@@ -2775,7 +2836,7 @@
     });
     const raijoSeikyo = collectList("raijo-seikyo-list");
     if (raijoSeikyo.length) {
-      report += `《生協》相談会\n`;
+      report += `《生協》来場\n`;
       raijoSeikyo.forEach(t => report += `${t}\n`);
     }
     report += "\n";
@@ -2873,6 +2934,7 @@
         .map(item => ({
           date: item.querySelector(".meet-date").value.trim(),
           venue: item.querySelector(".meet-venue").value.trim(),
+          venueType: (item.querySelector(".meet-venue-type") || {}).value || "",
           shinki: parseInt(item.querySelector(".meet-num.shinki").value) || 0,
           koukyaku: parseInt(item.querySelector(".meet-num.koukyaku").value) || 0
         }))
@@ -2883,6 +2945,7 @@
       .map(item => ({
         date: item.querySelector(".meet-date").value.trim(),
         venue: item.querySelector(".meet-venue").value.trim(),
+        venueType: (item.querySelector(".meet-venue-type") || {}).value || "",
         shinki: parseInt(item.querySelector(".meet-num.shinki").value) || 0,
         koukyaku: parseInt(item.querySelector(".meet-num.koukyaku").value) || 0
       }))
