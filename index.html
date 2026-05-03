@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>本日の最終報告 | NICヒアリング</title>
+<title>最終報告 | NICヒアリング</title>
 <style>
   :root {
     --navy: #203764;
@@ -301,6 +301,104 @@
   .section.collapsed .toggle { transform: rotate(-90deg); }
   .section.collapsed .section-body { display: none; }
   .section-body { padding: 12px 14px; }
+
+  /* 現在の売上 専用スタイル */
+  .sales-section {
+    background: linear-gradient(135deg, var(--turquoise) 0%, #00C8E8 100%);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 176, 221, 0.25);
+  }
+  .sales-header {
+    cursor: default !important;
+    padding: 10px 14px 6px !important;
+  }
+  .sales-header h2 {
+    color: var(--white) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px !important;
+    letter-spacing: 0.05em;
+  }
+  .sales-icon {
+    font-size: 20px;
+  }
+  .sales-body {
+    padding: 4px 12px 12px !important;
+  }
+  .sales-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+  .sales-item {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 6px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+  .sales-item label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .sales-stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--white);
+    border: 1.5px solid var(--turquoise);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .sales-stepper .stepper-btn {
+    background: var(--turquoise-light);
+    color: var(--navy);
+    border: none;
+    width: 26px;
+    height: 32px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .sales-stepper .stepper-btn:hover { background: var(--turquoise); color: var(--white); }
+  .sales-stepper .stepper-btn:active { background: var(--navy); color: var(--white); }
+  .sales-stepper input {
+    width: 36px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--fuchsia);
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    height: 32px;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    padding: 0;
+    min-width: 0;
+  }
+  .sales-stepper input::-webkit-outer-spin-button,
+  .sales-stepper input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .sales-unit {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+  }
 
   .count-badge {
     background: var(--turquoise);
@@ -1266,7 +1364,7 @@
 
   <header class="header" id="appHeader">
     <div class="header-row1">
-      <h1>【本日の最終報告】<span class="accent">DAILY REPORT</span></h1>
+      <h1>【最終報告】<span class="accent">DAILY REPORT</span></h1>
       <button class="header-toggle" onclick="toggleHeader()" aria-label="ヘッダー開閉">▼</button>
     </div>
     <div class="header-row2">
@@ -1287,6 +1385,44 @@
       </div>
     </div>
   </header>
+
+  <!-- 現在の売上 -->
+  <section class="section sales-section" id="sec-sales">
+    <div class="section-header sales-header">
+      <h2><span class="sales-icon">💎</span>現在の売上</h2>
+    </div>
+    <div class="section-body sales-body" style="display: block;">
+      <div class="sales-grid">
+        <div class="sales-item">
+          <label>今月JA</label>
+          <div class="num-stepper sales-stepper">
+            <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+            <input type="number" id="sales-this-ja" value="0" min="0" inputmode="numeric">
+            <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+          </div>
+          <span class="sales-unit">台</span>
+        </div>
+        <div class="sales-item">
+          <label>今月生協</label>
+          <div class="num-stepper sales-stepper">
+            <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+            <input type="number" id="sales-this-seikyo" value="0" min="0" inputmode="numeric">
+            <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+          </div>
+          <span class="sales-unit">台</span>
+        </div>
+        <div class="sales-item">
+          <label>来月繰越</label>
+          <div class="num-stepper sales-stepper">
+            <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+            <input type="number" id="sales-next-month" value="0" min="0" inputmode="numeric">
+            <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+          </div>
+          <span class="sales-unit">台</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- 商談件数 月間累計 -->
   <section class="section" id="sec-count">
@@ -2494,6 +2630,14 @@
     if (!prev.sameMonth) {
       document.querySelectorAll("input[data-key]").forEach(i => i.value = 0);
     }
+    // 現在の売上（今月は月跨ぎでリセット、来月繰越は引き継ぎ）
+    const sales = prev.sales || { thisJA: 0, thisSeikyo: 0, nextMonth: 0 };
+    const elJA = document.getElementById("sales-this-ja");
+    const elSk = document.getElementById("sales-this-seikyo");
+    const elNx = document.getElementById("sales-next-month");
+    if (elJA) elJA.value = Number(sales.thisJA) || 0;
+    if (elSk) elSk.value = Number(sales.thisSeikyo) || 0;
+    if (elNx) elNx.value = Number(sales.nextMonth) || 0;
     // 県セレクト
     if (prev.aichiPref) {
       const ps = document.getElementById("aichi-pref-select");
@@ -2587,6 +2731,10 @@
   // ===== 全入力リセット =====
   function resetAllInputs() {
     document.querySelectorAll("input[data-key]").forEach(i => i.value = 0);
+    ["sales-this-ja", "sales-this-seikyo", "sales-next-month"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = 0;
+    });
     clearAllLists();
     document.getElementById("stock-list").innerHTML = "";
   }
@@ -2674,9 +2822,16 @@
 
     let report = "";
     report += "━━━━━━━━━━━━━━━━━━━━━\n";
-    report += `  【本日の最終報告】 ${rDateStr}\n`;
+    report += `  【最終報告】 ${rDateStr}\n`;
     report += `  報告者：${document.getElementById("userSelect").value}\n`;
     report += "━━━━━━━━━━━━━━━━━━━━━\n\n";
+
+    // 現在の売上
+    const salesJA = parseInt(document.getElementById("sales-this-ja").value) || 0;
+    const salesSeikyo = parseInt(document.getElementById("sales-this-seikyo").value) || 0;
+    const salesNext = parseInt(document.getElementById("sales-next-month").value) || 0;
+    report += `【現在の売上】 今月JA ${salesJA}台、生協 ${salesSeikyo}台 / 来月繰越 ${salesNext}台\n`;
+    report += "─────────────────────\n\n";
 
     const aichiPref = document.getElementById("aichi-pref-select").value;
     // 内訳計算（プレビュー用）
@@ -2750,6 +2905,35 @@
       });
       return result;
     };
+    // ※付きと連番（数字始まり）の件数をカウント
+    const countTypes = (sectionType) => {
+      let asterisk = 0, numbered = 0;
+      const container = document.getElementById(`${sectionType}-pref-blocks`);
+      if (container) {
+        container.querySelectorAll(".pref-list .list-item textarea").forEach(ta => {
+          const txt = ta.value.trim();
+          if (!txt) return;
+          if (txt.startsWith("※")) asterisk++;
+          else numbered++;
+        });
+      }
+      return { asterisk, numbered };
+    };
+    // 単独リスト用の※付き／連番カウント
+    const countTypesList = (listIds) => {
+      let asterisk = 0, numbered = 0;
+      listIds.forEach(id => {
+        const list = document.getElementById(id);
+        if (!list) return;
+        list.querySelectorAll(":scope > .list-item textarea").forEach(ta => {
+          const txt = ta.value.trim();
+          if (!txt) return;
+          if (txt.startsWith("※")) asterisk++;
+          else numbered++;
+        });
+      });
+      return { asterisk, numbered };
+    };
     const collectMeetBlocks = (sectionType) => {
       const result = [];
       const container = document.getElementById(`${sectionType}-pref-blocks`);
@@ -2817,7 +3001,8 @@
     const meetShinki = parseInt(document.getElementById("badge-meet-shinki").textContent) || 0;
     const meetKou = parseInt(document.getElementById("badge-meet-koukyaku").textContent) || 0;
     const meetSupport = parseInt((document.getElementById("badge-meet-support") || {}).textContent || "0") || 0;
-    report += `【今月の相談会】 ${meetTotal}会場（内サポ会場 ${meetSupport}） / 新規 ${meetShinki}名・顧客 ${meetKou}名\n`;
+    const meetNormal = meetTotal - meetSupport;
+    report += `【今月の相談会】 ${meetTotal}会場（ー ${meetNormal}・サポ会場 ${meetSupport}） / 新規 ${meetShinki}名・顧客 ${meetKou}名\n`;
     report += "─────────────────────\n";
     const meetData = collectMeetBlocks("meet");
     meetData.forEach(({pref, items, totalShinki, totalKou}) => {
@@ -2833,8 +3018,39 @@
 
     // 新規来場
     const raijoSupportNum = (document.getElementById("badge-raijo-support") || {}).textContent || "0";
-    const raijoBreakdown = `（内サポAPO　${raijoSupportNum}件）`;
-    report += "【新規---来場】" + raijoBreakdown + "\n";
+    // venueプルダウン（ー / サポ会場）の集計
+    const raijoVenueCount = (() => {
+      let none = 0, support = 0;
+      const container = document.getElementById("raijo-pref-blocks");
+      if (container) {
+        container.querySelectorAll(".pref-list .list-item").forEach(item => {
+          const ta = item.querySelector("textarea");
+          if (!ta || !ta.value.trim()) return;
+          const sel = item.querySelector('select[data-name="venue"]');
+          if (sel && sel.value === "サポ会場") support++;
+          else none++;
+        });
+      }
+      const seikyoList = document.getElementById("raijo-seikyo-list");
+      if (seikyoList) {
+        seikyoList.querySelectorAll(":scope > .list-item").forEach(item => {
+          const ta = item.querySelector("textarea");
+          if (!ta || !ta.value.trim()) return;
+          const sel = item.querySelector('select[data-name="venue"]');
+          if (sel && sel.value === "サポ会場") support++;
+          else none++;
+        });
+      }
+      return { none, support };
+    })();
+    const raijoBreakdown = `（ー ${raijoVenueCount.none}・サポ会場 ${raijoVenueCount.support} / 内サポAPO　${raijoSupportNum}件）`;
+    report += "【新規---来場】" + raijoBreakdown + " " + (() => {
+      const r1 = countTypes("raijo");
+      const r2 = countTypesList(["raijo-seikyo-list"]);
+      const ast = r1.asterisk + r2.asterisk;
+      const num = r1.numbered + r2.numbered;
+      return `※${ast}件・今月${num}件`;
+    })() + "\n";
     report += "─────────────────────\n";
     const raijoData = collectPrefBlocks("raijo");
     raijoData.forEach(({pref, items}) => {
@@ -2849,7 +3065,15 @@
     report += "\n";
 
     // JA《新規》
-    report += "【JA《新規》---返信・問合・紹介・他】\n";
+    report += "【JA《新規》---返信・問合・紹介・他】 " + (() => {
+      const r1 = countTypes("respH");
+      const r2 = countTypes("respT");
+      const r3 = countTypes("respJ");
+      const r4 = countTypes("respS");
+      const ast = r1.asterisk + r2.asterisk + r3.asterisk + r4.asterisk;
+      const num = r1.numbered + r2.numbered + r3.numbered + r4.numbered;
+      return `※${ast}件・今月${num}件`;
+    })() + "\n";
     report += "─────────────────────\n";
     const respSubs = [
       { type: "respH", title: "■ JA新規---返信", breakdownId: null },
@@ -2870,7 +3094,10 @@
     });
 
     // 生協《新規》
-    report += "【生協《新規》---返信・問合・紹介・他】\n";
+    report += "【生協《新規》---返信・問合・紹介・他】 " + (() => {
+      const r = countTypesList(["srespH-list", "srespT-list", "srespJ-list", "srespS-list"]);
+      return `※${r.asterisk}件・今月${r.numbered}件`;
+    })() + "\n";
     report += "─────────────────────\n";
     const srespSubs2 = [
       { id: "srespH-list", title: "■ 生協新規---返信", breakdownId: null },
@@ -3031,6 +3258,13 @@
     const stock = Array.from(document.querySelectorAll("#stock-list input"))
       .map(i => i.value.trim()).filter(t => t.length > 0);
 
+    // 現在の売上
+    const sales = {
+      thisJA: parseInt(document.getElementById("sales-this-ja").value) || 0,
+      thisSeikyo: parseInt(document.getElementById("sales-this-seikyo").value) || 0,
+      nextMonth: parseInt(document.getElementById("sales-next-month").value) || 0
+    };
+
     return {
       action: "submit",
       user: document.getElementById("userSelect").value,
@@ -3041,11 +3275,13 @@
       nextFree,
       aichiPref,
       totalCount,
+      sales,
       meet,
       raijo,
       respJA,
       respSeikyo,
-      stock
+      stock,
+      mailBody: buildReport()
     };
   }
 
