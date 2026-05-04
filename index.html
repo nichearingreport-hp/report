@@ -1397,7 +1397,7 @@
           <label>今月JA</label>
           <div class="num-stepper sales-stepper">
             <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
-            <input type="number" id="sales-this-ja" value="0" min="0" inputmode="numeric">
+            <input type="number" id="sales-this-ja" value="0" inputmode="numeric">
             <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
           </div>
           <span class="sales-unit">台</span>
@@ -1406,7 +1406,7 @@
           <label>今月生協</label>
           <div class="num-stepper sales-stepper">
             <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
-            <input type="number" id="sales-this-seikyo" value="0" min="0" inputmode="numeric">
+            <input type="number" id="sales-this-seikyo" value="0" inputmode="numeric">
             <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
           </div>
           <span class="sales-unit">台</span>
@@ -1415,7 +1415,7 @@
           <label>来月繰越</label>
           <div class="num-stepper sales-stepper">
             <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
-            <input type="number" id="sales-next-month" value="0" min="0" inputmode="numeric">
+            <input type="number" id="sales-next-month" value="0" inputmode="numeric">
             <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
           </div>
           <span class="sales-unit">台</span>
@@ -1788,10 +1788,17 @@
     const input = btn.parentElement.querySelector('input[type="number"]');
     if (!input) return;
     let val = parseInt(input.value) || 0;
-    val = Math.max(0, val + delta);
+    val = val + delta;
     input.value = val;
     // 変更イベントを発火させて自動計算をトリガー
     input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  // 数値を画面表示用にフォーマット（マイナス値は▲表記）
+  function formatNumDisplay(n) {
+    const num = parseInt(n) || 0;
+    if (num < 0) return "▲" + Math.abs(num);
+    return String(num);
   }
 
   // ==========================================================
@@ -2190,7 +2197,7 @@
         <span class="meet-num-label">新規</span>
         <div class="meet-stepper">
           <button type="button" class="meet-stepper-btn minus" onclick="stepInput(this,-1)">−</button>
-          <input type="number" class="meet-num shinki" min="0" value="${data.shinki !== undefined ? data.shinki : 0}" inputmode="numeric">
+          <input type="number" class="meet-num shinki" value="${data.shinki !== undefined ? data.shinki : 0}" inputmode="numeric">
           <button type="button" class="meet-stepper-btn plus" onclick="stepInput(this,1)">＋</button>
         </div>
         <span class="meet-num-label">名</span>
@@ -2199,7 +2206,7 @@
         <span class="meet-num-label">顧客</span>
         <div class="meet-stepper">
           <button type="button" class="meet-stepper-btn minus" onclick="stepInput(this,-1)">−</button>
-          <input type="number" class="meet-num koukyaku" min="0" value="${data.koukyaku !== undefined ? data.koukyaku : 0}" inputmode="numeric">
+          <input type="number" class="meet-num koukyaku" value="${data.koukyaku !== undefined ? data.koukyaku : 0}" inputmode="numeric">
           <button type="button" class="meet-stepper-btn plus" onclick="stepInput(this,1)">＋</button>
         </div>
         <span class="meet-num-label">名</span>
@@ -2409,10 +2416,10 @@
     const aichiTotal = aichiCalc.total;
     const seikyoTotal = seikyoCalc.total;
     const grandTotal = aichiTotal + seikyoTotal;
-    document.getElementById("aichi-subtotal").innerHTML = `合計商談 ${aichiTotal}件<span class="breakdown">(新規${aichiCalc.shinki}件、リピート${aichiCalc.repeat}件、その他${aichiCalc.other}件)</span>`;
-    document.getElementById("seikyo-subtotal").innerHTML = `合計商談 ${seikyoTotal}件<span class="breakdown">(新規${seikyoCalc.shinki}件、リピート${seikyoCalc.repeat}件、その他${seikyoCalc.other}件)</span>`;
-    document.getElementById("totalDisplay").textContent = grandTotal;
-    document.getElementById("badge-count").textContent = grandTotal;
+    document.getElementById("aichi-subtotal").innerHTML = `合計商談 ${formatNumDisplay(aichiTotal)}件<span class="breakdown">(新規${formatNumDisplay(aichiCalc.shinki)}件、リピート${formatNumDisplay(aichiCalc.repeat)}件、その他${formatNumDisplay(aichiCalc.other)}件)</span>`;
+    document.getElementById("seikyo-subtotal").innerHTML = `合計商談 ${formatNumDisplay(seikyoTotal)}件<span class="breakdown">(新規${formatNumDisplay(seikyoCalc.shinki)}件、リピート${formatNumDisplay(seikyoCalc.repeat)}件、その他${formatNumDisplay(seikyoCalc.other)}件)</span>`;
+    document.getElementById("totalDisplay").textContent = formatNumDisplay(grandTotal);
+    document.getElementById("badge-count").textContent = formatNumDisplay(grandTotal);
 
     // 相談会
     let meetCount = 0, meetShinki = 0, meetKoukyaku = 0, meetSupport = 0;
@@ -2657,16 +2664,31 @@
       });
     }
 
+    // 復元用：lineが文字列でもオブジェクトでも適切に処理
+    const restoreItem = (line) => {
+      if (typeof line === "object" && line !== null) {
+        // 新形式：{text, seq, dropdownValues}
+        const text = line.text || "";
+        let type = "";
+        if (text.includes("成約") || text.includes("⭕") || text.includes("契約")) type = "success";
+        else if (text.match(/SO|[Ss]o(?![a-z])|アウト/)) type = "so";
+        return { text: text, type: type, dropdownValues: line.dropdownValues || {} };
+      }
+      // 旧形式（文字列）：parseListLineで処理
+      const parsed = parseListLine(line);
+      return { text: parsed.text, type: parsed.type, dropdownValues: {} };
+    };
+
     // 新規来場
     if (prev.raijo) {
       (prev.raijo.prefs || []).forEach(pb => {
-        const items = (pb.items || []).map(line => parseListLine(line));
+        const items = (pb.items || []).map(line => restoreItem(line));
         addPrefBlock("raijo", pb.pref, items);
       });
       (prev.raijo.seikyo || []).forEach(line => {
         const list = document.getElementById("raijo-seikyo-list");
-        const item = parseListLine(line);
-        list.appendChild(createListItem(item.text, item.type, true, "raijoSeikyo", {}));
+        const item = restoreItem(line);
+        list.appendChild(createListItem(item.text, item.type, true, "raijoSeikyo", item.dropdownValues));
       });
     }
 
@@ -2675,7 +2697,7 @@
       ["respH", "respT", "respJ", "respS"].forEach(key => {
         const arr = prev.respJA[key] || [];
         arr.forEach(pb => {
-          const items = (pb.items || []).map(line => parseListLine(line));
+          const items = (pb.items || []).map(line => restoreItem(line));
           addPrefBlock(key, pb.pref, items);
         });
       });
@@ -2692,8 +2714,8 @@
                            key === "srespS" ? "seikyoSP" :
                            "seikyoPlain";
           arr.forEach(line => {
-            const item = parseListLine(line);
-            list.appendChild(createListItem(item.text, item.type, true, category, {}));
+            const item = restoreItem(line);
+            list.appendChild(createListItem(item.text, item.type, true, category, item.dropdownValues));
           });
         }
       });
@@ -2711,11 +2733,21 @@
   // 行頭の連番（"1.", "※"など）を除去してテキストを返す
   function parseListLine(line) {
     if (typeof line !== "string") return { text: "", type: "" };
-    const txt = line.replace(/^[0-9]+\.\s*/, "").replace(/^※\s*/, m => m.trim() + " ");
+    let txt = line.replace(/^[0-9]+\.\s*/, "").replace(/^※\s*/, m => m.trim() + " ");
+    // 先頭の [xxx] タグ（複数連結も）を全部除去
+    while (true) {
+      // ※プレフィックスを保持しつつタグだけ剥がす
+      const m = txt.match(/^(※\s*)?\s*(\[[^\]]*\]\s*)+/);
+      if (!m) break;
+      const asteriskPrefix = m[1] || "";
+      txt = asteriskPrefix + txt.slice(m[0].length);
+      // 無限ループ防止
+      if (!m[0] || m[0] === asteriskPrefix) break;
+    }
     let type = "";
     if (txt.includes("成約") || txt.includes("⭕") || txt.includes("契約")) type = "success";
     else if (txt.match(/SO|[Ss]o(?![a-z])|アウト/)) type = "so";
-    return { text: line.startsWith("※") ? line.replace(/^※\s*/, "※") : txt, type };
+    return { text: txt.startsWith("※") ? txt.replace(/^※\s*/, "※") : txt, type };
   }
 
   // ===== 社員情報（送信先メール）反映 =====
@@ -2830,7 +2862,7 @@
     const salesJA = parseInt(document.getElementById("sales-this-ja").value) || 0;
     const salesSeikyo = parseInt(document.getElementById("sales-this-seikyo").value) || 0;
     const salesNext = parseInt(document.getElementById("sales-next-month").value) || 0;
-    report += `【現在の売上】 今月JA ${salesJA}台、生協 ${salesSeikyo}台 / 来月繰越 ${salesNext}台\n`;
+    report += `【現在の売上】 今月JA ${formatNumDisplay(salesJA)}台、生協 ${formatNumDisplay(salesSeikyo)}台 / 来月繰越 ${formatNumDisplay(salesNext)}台\n`;
     report += "─────────────────────\n\n";
 
     const aichiPref = document.getElementById("aichi-pref-select").value;
@@ -2846,12 +2878,14 @@
     const seikyoSum = seikyoShinki + seikyoRepeat + seikyoOther;
     const seikyoJshoLabel = (document.getElementById("seikyo-jsho-label") || {}).textContent || "生協紹";
 
-    report += `【商談件数 月間累計】 ${grandTotal}件\n`;
+    // 月間累計用の数値表示ヘルパー
+    const vd = (key) => formatNumDisplay(v(key));
+    report += `【商談件数 月間累計】 ${formatNumDisplay(grandTotal)}件\n`;
     report += "─────────────────────\n";
-    report += `《${aichiPref}》　合計商談 ${aichiSum}件 (新規${aichiShinki}件、リピート${aichiRepeat}件、その他${aichiOther}件)\n`;
-    report += `  相談会 ${v("aichi-soudan")}　返信 ${v("aichi-henshin")}　問合 ${v("aichi-toiawase")}　J紹 ${v("aichi-jsho")}　客紹 ${v("aichi-kakusho")}　追買 ${v("aichi-tsuikai")}　SO ${v("aichi-so")}　その他 ${v("aichi-other")}件\n`;
-    report += `《生協》　合計商談 ${seikyoSum}件 (新規${seikyoShinki}件、リピート${seikyoRepeat}件、その他${seikyoOther}件)\n`;
-    report += `  相談会 ${v("seikyo-soudan")}　返信 ${v("seikyo-henshin")}　問合 ${v("seikyo-toiawase")}　${seikyoJshoLabel} ${v("seikyo-jsho")}　客紹 ${v("seikyo-kakusho")}　追買 ${v("seikyo-tsuikai")}　SO ${v("seikyo-so")}　その他 ${v("seikyo-other")}件\n\n`;
+    report += `《${aichiPref}》　合計商談 ${formatNumDisplay(aichiSum)}件 (新規${formatNumDisplay(aichiShinki)}件、リピート${formatNumDisplay(aichiRepeat)}件、その他${formatNumDisplay(aichiOther)}件)\n`;
+    report += `  相談会 ${vd("aichi-soudan")}　返信 ${vd("aichi-henshin")}　問合 ${vd("aichi-toiawase")}　J紹 ${vd("aichi-jsho")}　客紹 ${vd("aichi-kakusho")}　追買 ${vd("aichi-tsuikai")}　SO ${vd("aichi-so")}　その他 ${vd("aichi-other")}件\n`;
+    report += `《生協》　合計商談 ${formatNumDisplay(seikyoSum)}件 (新規${formatNumDisplay(seikyoShinki)}件、リピート${formatNumDisplay(seikyoRepeat)}件、その他${formatNumDisplay(seikyoOther)}件)\n`;
+    report += `  相談会 ${vd("seikyo-soudan")}　返信 ${vd("seikyo-henshin")}　問合 ${vd("seikyo-toiawase")}　${seikyoJshoLabel} ${vd("seikyo-jsho")}　客紹 ${vd("seikyo-kakusho")}　追買 ${vd("seikyo-tsuikai")}　SO ${vd("seikyo-so")}　その他 ${vd("seikyo-other")}件\n\n`;
 
     report += "【本日の商談】\n";
     report += "─────────────────────\n";
@@ -2874,15 +2908,30 @@
 
     // プルダウン値を本文に組み込むヘルパー
     const formatItemText = (item, txt) => {
+      // 先頭の※を保持しつつ、既存タグを除去
+      let cleaned = txt;
+      const asteriskMatch = cleaned.match(/^※\s*/);
+      const asteriskPrefix = asteriskMatch ? "※" : "";
+      if (asteriskMatch) cleaned = cleaned.slice(asteriskMatch[0].length);
+      while (true) {
+        const m = cleaned.match(/^\s*\[[^\]]*\]\s*/);
+        if (!m) break;
+        cleaned = cleaned.slice(m[0].length);
+      }
+      cleaned = asteriskPrefix + cleaned;
       const dropdowns = item.querySelectorAll(".list-dropdown");
-      if (dropdowns.length === 0) return txt;
+      if (dropdowns.length === 0) return cleaned;
       const tags = [];
       dropdowns.forEach(sel => {
         const v = sel.value.trim();
         if (v) tags.push(v);
       });
-      if (tags.length === 0) return txt;
-      return `[${tags.join("/")}] ${txt}`;
+      if (tags.length === 0) return cleaned;
+      // ※の後ろ、または先頭にタグを付与
+      if (cleaned.startsWith("※")) {
+        return `※[${tags.join("/")}] ${cleaned.slice(1).trim()}`;
+      }
+      return `[${tags.join("/")}] ${cleaned}`;
     };
 
     const collectPrefBlocks = (sectionType) => {
@@ -3187,17 +3236,28 @@
       .forEach(it => meet.seikyo.push(it));
 
     // 県別ブロック収集ヘルパー（共通）
-    // プルダウン値を本文に組み込むヘルパー
-    const formatItemText = (item, txt) => {
-      const dropdowns = item.querySelectorAll(".list-dropdown");
-      if (dropdowns.length === 0) return txt;
-      const tags = [];
-      dropdowns.forEach(sel => {
-        const v = sel.value.trim();
-        if (v) tags.push(v);
+    // プルダウン値を取得するヘルパー
+    const getDropdownValues = (item) => {
+      const values = {};
+      item.querySelectorAll(".list-dropdown").forEach(sel => {
+        const name = sel.dataset.name;
+        if (name) values[name] = sel.value || "";
       });
-      if (tags.length === 0) return txt;
-      return `[${tags.join("/")}] ${txt}`;
+      return values;
+    };
+
+    // テキスト本体から先頭の[xxx]タグを除去
+    const stripTags = (txt) => {
+      let cleaned = txt;
+      const asteriskMatch = cleaned.match(/^※\s*/);
+      const asteriskPrefix = asteriskMatch ? "※" : "";
+      if (asteriskMatch) cleaned = cleaned.slice(asteriskMatch[0].length);
+      while (true) {
+        const m = cleaned.match(/^\s*\[[^\]]*\]\s*/);
+        if (!m) break;
+        cleaned = cleaned.slice(m[0].length);
+      }
+      return asteriskPrefix + cleaned;
     };
 
     const collectPrefBlocksRaw = (sectionType) => {
@@ -3212,9 +3272,9 @@
             const seq = seqEl ? seqEl.textContent : "";
             const txt = item.querySelector("textarea").value.trim();
             if (!txt) return null;
-            if (txt.startsWith("※")) return formatItemText(item, txt);
-            const formatted = formatItemText(item, txt);
-            return seq ? `${seq} ${formatted}` : formatted;
+            const cleanText = stripTags(txt);
+            const dropdownValues = getDropdownValues(item);
+            return { text: cleanText, seq: seq || "", dropdownValues };
           }).filter(t => t);
         if (items.length > 0) result.push({ pref, items });
       });
@@ -3229,9 +3289,9 @@
           const seq = seqEl ? seqEl.textContent : "";
           const txt = item.querySelector("textarea").value.trim();
           if (!txt) return null;
-          if (txt.startsWith("※")) return formatItemText(item, txt);
-          const formatted = formatItemText(item, txt);
-          return seq ? `${seq} ${formatted}` : formatted;
+          const cleanText = stripTags(txt);
+          const dropdownValues = getDropdownValues(item);
+          return { text: cleanText, seq: seq || "", dropdownValues };
         }).filter(t => t);
     };
 
