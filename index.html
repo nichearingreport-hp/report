@@ -1539,7 +1539,7 @@
   <section class="section collapsed" id="sec-raijo">
     <div class="section-header" onclick="toggleSection('sec-raijo')">
       <h2><span class="icon">▶</span>新規---来場<span class="inherit-badge">前日引継</span></h2>
-      <div class="count-badge">JA<span class="num" id="badge-raijo">0</span>件<span class="meet-support-badge">（内サポAPO　<span id="badge-raijo-support">0</span>）</span></div>
+      <div class="count-badge">JA※<span class="num" id="badge-raijo-ast">0</span>件・JA今月<span class="num" id="badge-raijo">0</span>件<span class="meet-support-badge">（内サポAPO　<span id="badge-raijo-support">0</span>件）</span></div>
       <span class="toggle">▼</span>
     </div>
     <div class="section-body">
@@ -1567,7 +1567,7 @@
   <section class="section collapsed" id="sec-resp">
     <div class="section-header" onclick="toggleSection('sec-resp')">
       <h2><span class="icon">▶</span>JA《新規》---返信・問合・紹介・他<span class="inherit-badge">前日引継</span></h2>
-      <div class="count-badge"><span class="num" id="badge-resp">0</span>件</div>
+      <div class="count-badge">JA※<span class="num" id="badge-resp-ast">0</span>件・JA今月<span class="num" id="badge-resp">0</span>件</div>
       <span class="toggle">▼</span>
     </div>
     <div class="section-body">
@@ -1630,7 +1630,7 @@
   <section class="section collapsed" id="sec-sresp">
     <div class="section-header" onclick="toggleSection('sec-sresp')">
       <h2><span class="icon">▶</span>生協《新規》---返信・問合・紹介・他<span class="inherit-badge">前日引継</span></h2>
-      <div class="count-badge"><span class="num" id="badge-sresp">0</span>件</div>
+      <div class="count-badge">JA※<span class="num" id="badge-sresp-ast">0</span>件・JA今月<span class="num" id="badge-sresp">0</span>件</div>
       <span class="toggle">▼</span>
     </div>
     <div class="section-body">
@@ -2375,6 +2375,17 @@
       return t && t.value.trim().length > 0;
     }).length;
   }
+  // ※付きと連番（今月）の件数を分けてカウント
+  function countListItemsByType(list) {
+    let asterisk = 0, numbered = 0;
+    list.querySelectorAll(":scope > .list-item").forEach(item => {
+      const t = item.querySelector("textarea");
+      if (!t || !t.value.trim()) return;
+      if (t.value.trim().startsWith("※")) asterisk++;
+      else numbered++;
+    });
+    return { asterisk, numbered };
+  }
   function countMeetItems(list) {
     let count = 0, shinki = 0, koukyaku = 0, support = 0;
     list.querySelectorAll(":scope > .meet-item").forEach(item => {
@@ -2458,22 +2469,26 @@
       "respS": "badge-respS"
     };
 
-    let respJATotal = 0;
+    let respJAAst = 0, respJANum = 0;
 
     respSections.forEach(secType => {
-      let total = 0;
+      let total = 0, totalAst = 0, totalNum = 0;
       const container = document.getElementById(`${secType}-pref-blocks`);
       if (container) {
         container.querySelectorAll(".list-area").forEach(block => {
           const list = block.querySelector(".pref-list");
           const cnt = countListItems(list);
+          const byType = countListItemsByType(list);
           block.querySelector(".sub-count").textContent = `${cnt}件`;
           total += cnt;
+          totalAst += byType.asterisk;
+          totalNum += byType.numbered;
         });
       }
       if (secType === "raijo") {
-        // 来場：badge-raijoは県（JA）のみ、生協は別表示
-        document.getElementById(sectionBadges[secType]).textContent = total;
+        // 来場：badge-raijo は今月（JA）、badge-raijo-ast は※
+        document.getElementById("badge-raijo").textContent = totalNum;
+        document.getElementById("badge-raijo-ast").textContent = totalAst;
         // 生協来場ブロック側
         const seikyoList = document.getElementById("raijo-seikyo-list");
         if (seikyoList) {
@@ -2491,22 +2506,35 @@
       } else {
         document.getElementById(sectionBadges[secType]).textContent = total;
       }
-      if (secType.startsWith("resp")) respJATotal += total;
+      if (secType.startsWith("resp")) {
+        respJAAst += totalAst;
+        respJANum += totalNum;
+      }
     });
-    document.getElementById("badge-resp").textContent = respJATotal;
+    // JA《新規》ヘッダーバッジ：※と今月
+    document.getElementById("badge-resp").textContent = respJANum;
+    const respAstEl = document.getElementById("badge-resp-ast");
+    if (respAstEl) respAstEl.textContent = respJAAst;
 
     // 生協《新規》各小項目（県別ブロックではなく直下リスト）
     const srespSubs = ["srespH", "srespT", "srespJ", "srespS"];
-    let srespTotal = 0;
+    let srespTotal = 0, srespAst = 0, srespNum = 0;
     srespSubs.forEach(secType => {
       const list = document.getElementById(`${secType}-list`);
       let cnt = 0;
-      if (list) cnt = countListItems(list);
+      if (list) {
+        cnt = countListItems(list);
+        const byType = countListItemsByType(list);
+        srespAst += byType.asterisk;
+        srespNum += byType.numbered;
+      }
       const badge = document.getElementById(`badge-${secType}`);
       if (badge) badge.textContent = cnt;
       srespTotal += cnt;
     });
-    document.getElementById("badge-sresp").textContent = srespTotal;
+    document.getElementById("badge-sresp").textContent = srespNum;
+    const srespAstEl = document.getElementById("badge-sresp-ast");
+    if (srespAstEl) srespAstEl.textContent = srespAst;
 
     // ===== 各セクション内訳の集計（プルダウン値による） =====
     // breakdown-respJ: JA紹介・客紹介
@@ -3074,29 +3102,31 @@
     }
     report += "\n";
 
-    // 新規来場：JA（県）と生協で個別集計
+    // 新規来場：JA（県）と生協で個別集計、※と今月の分離も実施
     const raijoStats = (() => {
       const collectStats = (container, isSeikyoList) => {
-        let total = 0, supportApo = 0;
+        let astTotal = 0, numTotal = 0, supportApo = 0;
         const items = isSeikyoList
           ? container.querySelectorAll(":scope > .list-item")
           : container.querySelectorAll(".pref-list .list-item");
         items.forEach(item => {
           const ta = item.querySelector("textarea");
           if (!ta || !ta.value.trim()) return;
-          total++;
+          const txt = ta.value.trim();
+          if (txt.startsWith("※")) astTotal++;
+          else numTotal++;
           const apoSel = item.querySelector('select[data-name="apo"]');
           if (apoSel && apoSel.value === "サポAPO") supportApo++;
         });
-        return { total, supportApo };
+        return { astTotal, numTotal, supportApo };
       };
       const jaContainer = document.getElementById("raijo-pref-blocks");
-      const ja = jaContainer ? collectStats(jaContainer, false) : { total: 0, supportApo: 0 };
+      const ja = jaContainer ? collectStats(jaContainer, false) : { astTotal: 0, numTotal: 0, supportApo: 0 };
       const seikyoList = document.getElementById("raijo-seikyo-list");
-      const seikyo = seikyoList ? collectStats(seikyoList, true) : { total: 0, supportApo: 0 };
+      const seikyo = seikyoList ? collectStats(seikyoList, true) : { astTotal: 0, numTotal: 0, supportApo: 0 };
       return { ja, seikyo };
     })();
-    report += `【新規---来場】 JA${raijoStats.ja.total}件（内サポAPO ${raijoStats.ja.supportApo}）\n`;
+    report += `【新規---来場】 JA※${raijoStats.ja.astTotal}件・JA今月${raijoStats.ja.numTotal}件（内サポAPO ${raijoStats.ja.supportApo}件）\n`;
     report += "─────────────────────\n";
     const raijoData = collectPrefBlocks("raijo");
     raijoData.forEach(({pref, items}) => {
@@ -3105,7 +3135,7 @@
     });
     const raijoSeikyo = collectList("raijo-seikyo-list");
     if (raijoSeikyo.length) {
-      report += `《生協》来場　生協${raijoStats.seikyo.total}件（内サポAPO ${raijoStats.seikyo.supportApo}）\n`;
+      report += `《生協》来場　※${raijoStats.seikyo.astTotal}件・今月${raijoStats.seikyo.numTotal}件（内サポAPO ${raijoStats.seikyo.supportApo}件）\n`;
       raijoSeikyo.forEach(t => report += `${t}\n`);
     }
     report += "\n";
