@@ -3065,41 +3065,37 @@
     }
     report += "\n";
 
-    // 新規来場
-    const raijoSupportNum = (document.getElementById("badge-raijo-support") || {}).textContent || "0";
-    // venueプルダウン（ー / サポ会場）の集計
-    const raijoVenueCount = (() => {
-      let none = 0, support = 0;
+    // 新規来場：※と今月、それぞれにサポAPO件数を個別カウント
+    const raijoStats = (() => {
+      let astTotal = 0, astSupport = 0;     // ※件、※件中のサポAPO
+      let numTotal = 0, numSupport = 0;     // 今月件、今月件中のサポAPO
+      const collectFromContainer = (container, isSeikyoList) => {
+        const items = isSeikyoList
+          ? container.querySelectorAll(":scope > .list-item")
+          : container.querySelectorAll(".pref-list .list-item");
+        items.forEach(item => {
+          const ta = item.querySelector("textarea");
+          if (!ta || !ta.value.trim()) return;
+          const txt = ta.value.trim();
+          const apoSel = item.querySelector('select[data-name="apo"]');
+          const isSupportApo = apoSel && apoSel.value === "サポAPO";
+          if (txt.startsWith("※")) {
+            astTotal++;
+            if (isSupportApo) astSupport++;
+          } else {
+            numTotal++;
+            if (isSupportApo) numSupport++;
+          }
+        });
+      };
       const container = document.getElementById("raijo-pref-blocks");
-      if (container) {
-        container.querySelectorAll(".pref-list .list-item").forEach(item => {
-          const ta = item.querySelector("textarea");
-          if (!ta || !ta.value.trim()) return;
-          const sel = item.querySelector('select[data-name="venue"]');
-          if (sel && sel.value === "サポ会場") support++;
-          else none++;
-        });
-      }
+      if (container) collectFromContainer(container, false);
       const seikyoList = document.getElementById("raijo-seikyo-list");
-      if (seikyoList) {
-        seikyoList.querySelectorAll(":scope > .list-item").forEach(item => {
-          const ta = item.querySelector("textarea");
-          if (!ta || !ta.value.trim()) return;
-          const sel = item.querySelector('select[data-name="venue"]');
-          if (sel && sel.value === "サポ会場") support++;
-          else none++;
-        });
-      }
-      return { none, support };
+      if (seikyoList) collectFromContainer(seikyoList, true);
+      return { astTotal, astSupport, numTotal, numSupport };
     })();
-    const raijoBreakdown = `（ー ${raijoVenueCount.none}・サポ会場 ${raijoVenueCount.support} / 内サポAPO　${raijoSupportNum}件）`;
-    report += "【新規---来場】" + raijoBreakdown + " " + (() => {
-      const r1 = countTypes("raijo");
-      const r2 = countTypesList(["raijo-seikyo-list"]);
-      const ast = r1.asterisk + r2.asterisk;
-      const num = r1.numbered + r2.numbered;
-      return `※${ast}件・今月${num}件`;
-    })() + "\n";
+    const raijoGrandTotal = raijoStats.astTotal + raijoStats.numTotal;
+    report += `【新規---来場】 ${raijoGrandTotal}件（※${raijoStats.astTotal}件、内サポAPO${raijoStats.astSupport}件・今月${raijoStats.numTotal}件、内サポAPO${raijoStats.numSupport}件）\n`;
     report += "─────────────────────\n";
     const raijoData = collectPrefBlocks("raijo");
     raijoData.forEach(({pref, items}) => {
