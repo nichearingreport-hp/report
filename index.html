@@ -1555,7 +1555,7 @@
       <div class="seikyo-block">
         <div class="seikyo-block-title">
           <span>《生協》来場</span>
-          <span class="sub-count" id="cnt-raijo-seikyo">生協0件（内サポAPO 0）</span>
+          <span class="sub-count" id="cnt-raijo-seikyo">生協※0件・生協今月0件（内サポAPO 0件）</span>
         </div>
         <div id="raijo-seikyo-list"></div>
         <button class="add-btn" onclick="addItemToList('raijo-seikyo-list', true)">＋ 来場記録を追加</button>
@@ -2443,16 +2443,17 @@
         // 生協来場ブロック側
         const seikyoList = document.getElementById("raijo-seikyo-list");
         if (seikyoList) {
-          const cnt = countListItems(seikyoList);
-          // 生協のサポAPO件数を集計
-          let seikyoSupportApo = 0;
+          // 生協の※/今月とサポAPO件数を集計
+          let seikyoAst = 0, seikyoNum = 0, seikyoSupportApo = 0;
           seikyoList.querySelectorAll(":scope > .list-item").forEach(item => {
             const ta = item.querySelector("textarea");
             if (!ta || !ta.value.trim()) return;
+            if (ta.value.trim().startsWith("※")) seikyoAst++;
+            else seikyoNum++;
             const apoSel = item.querySelector('select[data-name="apo"]');
             if (apoSel && apoSel.value === "サポAPO") seikyoSupportApo++;
           });
-          document.getElementById("cnt-raijo-seikyo").textContent = `生協${cnt}件（内サポAPO ${seikyoSupportApo}）`;
+          document.getElementById("cnt-raijo-seikyo").textContent = `生協※${seikyoAst}件・生協今月${seikyoNum}件（内サポAPO ${seikyoSupportApo}件）`;
         }
       } else {
         document.getElementById(sectionBadges[secType]).textContent = total;
