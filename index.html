@@ -1834,58 +1834,9 @@
     { key: "sp", label: "SP紹介/担当者紹介/その他", placeholder: "" }
   ];
 
+  // 本番運用ではサンプルデータは空（プロトタイプ時代の名残を整理）
   const initialData = {
-    today: {
-      henshin: ["返信　JAなごや　川口様→NX477両耳　4/29 納品時計上"],
-      tsuikai: ["RU5ITC 片耳追加→5/12 納品時計上"]
-    },
-    meetPrefs: [
-      { pref: "愛知", items: [
-        { date: "4/6", venue: "JAなごや 中川中部支店", shinki: 3, koukyaku: 0 },
-        { date: "4/10", venue: "JAなごや 南陽町支店", shinki: 3, koukyaku: 2 },
-        { date: "4/14", venue: "JAなごや 岩塚支店", shinki: 1, koukyaku: 1 },
-        { date: "4/17", venue: "JAなごや 港東支店", shinki: 1, koukyaku: 0 },
-        { date: "4/21", venue: "JAあいち海部 大治支店", shinki: 3, koukyaku: 0 }
-      ]}
-    ],
-    raijoPrefs: [
-      { pref: "愛知", items: [
-        { text: "※12/15 JAなごや中川中部　鈴木様→入院後治療中の為、退院後連絡いただけるとの事", type: "" },
-        { text: "※3/31 JAなごや中川中部　梅本様(ご自宅相談)→4/9 健聴と高度。NX588、788片耳で娘様に相談中", type: "" },
-        { text: "4/6 JAなごや中川中部　山田様→4/13再訪　SO 歯の治療に100万以上かかる当分無理", type: "so" },
-        { text: "4/6 JAなごや中川中部　井戸田様→奥様都合確認→4/9まだ確認してない", type: "" },
-        { text: "4/6 JAなごや中川中部　立松様→4/15再訪　VI56かXF56子供三人で機種検討後5月返事", type: "" },
-        { text: "4/7 JAなごや南陽町　岩田様(ご自宅相談)→4/16 VI560両耳成約⭕️", type: "success" },
-        { text: "4/10 JAなごや南陽町　木村様→娘様反対SO", type: "so" },
-        { text: "4/10 JAなごや南陽町　見田様→So中軽度で今すぐは考えていない", type: "so" },
-        { text: "4/10 JAなごや南陽町　森崎様→So金額アウト", type: "so" },
-        { text: "4/14 JAなごや岩塚　永井様→So 1年半前に替えたばかりなので暫くこのまま使い検討する", type: "so" },
-        { text: "4/17 JAなごや港東　熊崎様→SO 自宅リフォーム中なので落ち着いたら考える", type: "so" },
-        { text: "4/21 JAあいち海部大治　伊藤様→4/27再訪→家族反対で再訪キャンセル", type: "so" },
-        { text: "4/21 JAあいち海部大治　加藤様→4/27再訪→家族反対で再訪キャンセル", type: "so" },
-        { text: "4/21 JAあいち海部大治　山本様→4/28再訪→家族反対で再訪キャンセル", type: "so" }
-      ]}
-    ],
-    respHPrefs: [
-      { pref: "愛知", items: [
-        { text: "※3/17 JAなごや桜　宮崎様(DM)→3/24 XF560S両耳貸出　4/2〜4/10 成約⭕️", type: "success" },
-        { text: "4/17 JAなごや下之一色　川口様(新聞)→4/24 NX477両耳納品時計上→4/29", type: "" },
-        { text: "4/23 JAなごや下之一色　松波様(新聞)→4/28", type: "" }
-      ]}
-    ],
-    respTPrefs: [
-      { pref: "愛知", items: [
-        { text: "※3/31 JAなごや南陽町東　高羽様(広報誌)→4/1 SO(本人困っていないから付けたくない)", type: "so" },
-        { text: "4/14 JAなごや中川中部　久田様(広報誌)→4/17 XF5ITEかNX5ITEで検討→4/20XF5ITE両耳成約⭕️", type: "success" },
-        { text: "4/20 JAなごや小田井　伊藤様(広報誌)→4/23", type: "" }
-      ]}
-    ],
-    stock: [
-      "VI560S-DRWC(SD)×2台　MP2L2R(返却予定)",
-      "XF777-DWC ×2台",
-      "XF577-DWC ×2台",
-      "NX577-DWC ×1台(BZ)"
-    ]
+    today: {}
   };
 
   function updateDate() {
