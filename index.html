@@ -2796,9 +2796,25 @@
             opt.textContent = u.name;
             sel.appendChild(opt);
           });
+          // 前回この端末で選択した社員を復元
+          try {
+            const lastUser = localStorage.getItem("lastUser");
+            if (lastUser && users.some(u => u.name === lastUser)) {
+              sel.value = lastUser;
+            }
+          } catch (e) {
+            console.warn("localStorage読み込みエラー:", e);
+          }
         }
-        // 報告者変更時のリスナー
-        sel.addEventListener("change", onUserChanged);
+        // 報告者変更時のリスナー（選択時に端末に保存）
+        sel.addEventListener("change", () => {
+          try {
+            localStorage.setItem("lastUser", sel.value);
+          } catch (e) {
+            console.warn("localStorage書き込みエラー:", e);
+          }
+          onUserChanged();
+        });
         // 最初の社員のデータを読み込む
         if (users.length > 0) {
           await onUserChanged();
@@ -3347,6 +3363,12 @@
       const data = collectAllData();
       const result = await gasPost(data);
       if (result && result.success) {
+        // 送信成功時に、現在の報告者を端末に保存
+        try {
+          localStorage.setItem("lastUser", data.user || "");
+        } catch (e) {
+          console.warn("localStorage書き込みエラー:", e);
+        }
         const status = result.mailStatus;
         if (status === "ok") {
           showToast(`✓ ${result.mailCount}件の宛先に送信しました`);
