@@ -105,6 +105,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-top: 8px;
   }
   .report-date-input {
     background: var(--white);
@@ -147,6 +148,45 @@
     color: var(--navy);
     font-weight: 600;
     padding: 8px;
+  }
+  /* エリア・事業部プルダウン行 */
+  .header-row-org {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .org-select {
+    font-size: 13px !important;
+    padding: 5px 24px 5px 8px !important;
+    font-weight: 600 !important;
+  }
+  /* 固定表示（事業部・エリア） */
+  .org-fixed {
+    flex: 1;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 6px;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .org-fixed-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .org-fixed-value {
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .date-display {
     display: none;
@@ -398,6 +438,235 @@
     font-size: 11px;
     font-weight: 700;
     color: var(--navy);
+  }
+  .sales-notice {
+    background: rgba(255, 255, 255, 0.95);
+    border-left: 3px solid var(--fuchsia);
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+  }
+
+  /* 実績件数セクション */
+  .perf-section {
+    background: linear-gradient(135deg, var(--beige) 0%, #FFF1DA 100%);
+    border: 1px solid #E5D5B8;
+    box-shadow: 0 3px 10px rgba(180, 150, 100, 0.15);
+    margin-bottom: 12px;
+  }
+  .perf-header {
+    cursor: pointer !important;
+    padding: 10px 14px !important;
+    background: transparent !important;
+  }
+  .perf-header h2 {
+    color: var(--navy) !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em;
+  }
+  .perf-header h2 .icon {
+    color: var(--fuchsia) !important;
+  }
+  .perf-header .toggle {
+    color: var(--navy) !important;
+  }
+  .perf-icon-inline { font-size: 18px; }
+  .perf-icon { font-size: 20px; }
+  .perf-subtitle {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--fuchsia) !important;
+    margin-left: 4px;
+    letter-spacing: 0;
+  }
+  .perf-body { padding: 4px 12px 12px !important; }
+  .perf-notice {
+    background: rgba(199, 21, 133, 0.10);
+    border-left: 3px solid var(--fuchsia);
+    color: var(--fuchsia);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    letter-spacing: 0.02em;
+  }
+  .perf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  @media (min-width: 600px) {
+    .perf-grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+  .perf-group {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 8px 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  .perf-group-title {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--fuchsia);
+    margin-bottom: 6px;
+    letter-spacing: 0.03em;
+  }
+  .perf-pair {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .perf-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: space-between;
+  }
+  .perf-item label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--navy);
+    min-width: 38px;
+  }
+  .perf-stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--white);
+    border: 1.5px solid var(--navy);
+    border-radius: 6px;
+    overflow: hidden;
+    flex: 1;
+  }
+  .perf-stepper .stepper-btn {
+    background: #F0E8D8;
+    color: var(--navy);
+    border: none;
+    width: 22px;
+    height: 26px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .perf-stepper .stepper-btn:hover { background: var(--navy); color: var(--white); }
+  .perf-stepper .stepper-btn:active { background: var(--turquoise); color: var(--white); }
+  .perf-stepper input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--fuchsia);
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    height: 26px;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    padding: 0;
+  }
+  .perf-stepper input::-webkit-outer-spin-button,
+  .perf-stepper input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* 月内累計表示 */
+  .perf-monthly {
+    margin-top: 12px;
+    background: rgba(255,255,255,0.7);
+    border: 1px dashed #BFA67A;
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .perf-monthly-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+  .perf-monthly-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  @media (min-width: 600px) {
+    .perf-monthly-grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+  /* 納品ボックス専用スタイル */
+  .perf-group-nohan {
+    border: 1.5px dashed var(--fuchsia);
+    background: #FFF5FA;
+  }
+  .perf-group-sub {
+    display: block;
+    font-size: 9px;
+    color: var(--fuchsia);
+    font-weight: 700;
+    margin-top: 1px;
+    letter-spacing: 0;
+  }
+  .perf-group-notice {
+    margin-top: 4px;
+    padding: 3px 4px;
+    background: rgba(199, 21, 133, 0.10);
+    border-radius: 3px;
+    font-size: 9px;
+    color: var(--fuchsia);
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+  .perf-monthly-group {
+    background: var(--white);
+    border-radius: 6px;
+    padding: 5px 6px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .perf-monthly-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--fuchsia);
+    margin-bottom: 2px;
+  }
+  .perf-monthly-values {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    font-size: 11px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .perf-monthly-values .num {
+    color: var(--fuchsia);
+    font-weight: 800;
+    font-size: 13px;
+    margin-left: 2px;
   }
 
   .count-badge {
@@ -1367,6 +1636,19 @@
       <h1>【最終報告】<span class="accent">DAILY REPORT</span></h1>
       <button class="header-toggle" onclick="toggleHeader()" aria-label="ヘッダー開閉">▼</button>
     </div>
+    <div class="header-row-org">
+      <div class="org-fixed" id="divisionFixed">
+        <span class="org-fixed-label">事業部</span>
+        <span class="org-fixed-value">ヒアリング事業部</span>
+      </div>
+      <div class="org-fixed" id="areaFixed">
+        <span class="org-fixed-label">エリア</span>
+        <span class="org-fixed-value">中部</span>
+      </div>
+      <!-- 内部値保持用（hidden）-->
+      <input type="hidden" id="divisionSelect" value="ヒアリング事業部">
+      <input type="hidden" id="areaSelect" value="中部">
+    </div>
     <div class="header-row2">
       <input type="date" id="reportDate" class="report-date-input">
       <select class="user-select" id="userSelect">
@@ -1386,12 +1668,201 @@
     </div>
   </header>
 
+  <!-- 客数報告 -->
+  <section class="section perf-section" id="sec-perf">
+    <div class="section-header perf-header" onclick="toggleSection('sec-perf')">
+      <h2><span class="icon">▶</span><span class="perf-icon-inline">📊</span>客数報告<span class="perf-subtitle">（当日分の数値を入力する）</span></h2>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="section-body perf-body">
+      <div class="perf-notice">⚠ この項目の数値が日報へ反映されます</div>
+      <div class="perf-grid">
+        <div class="perf-group">
+          <div class="perf-group-title">客数</div>
+          <div class="perf-pair">
+            <div class="perf-item">
+              <label>総合計</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-kyaku-total" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+            <div class="perf-item">
+              <label>新規</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-kyaku-new" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="perf-group">
+          <div class="perf-group-title">商談</div>
+          <div class="perf-pair">
+            <div class="perf-item">
+              <label>総合計</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-shodan-total" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+            <div class="perf-item">
+              <label>新規</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-shodan-new" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="perf-group">
+          <div class="perf-group-title">試聴</div>
+          <div class="perf-pair">
+            <div class="perf-item">
+              <label>総合計</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-shicho-total" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+            <div class="perf-item">
+              <label>新規</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-shicho-new" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="perf-group">
+          <div class="perf-group-title">契約</div>
+          <div class="perf-pair">
+            <div class="perf-item">
+              <label>総合計</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-keiyaku-total" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+            <div class="perf-item">
+              <label>新規</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-keiyaku-new" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="perf-group">
+          <div class="perf-group-title">契約CAN</div>
+          <div class="perf-pair">
+            <div class="perf-item">
+              <label>総合計</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-can-total" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+            <div class="perf-item">
+              <label>新規</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-can-new" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="perf-group perf-group-nohan">
+          <div class="perf-group-title">納品<span class="perf-group-sub">※確認用※</span></div>
+          <div class="perf-pair">
+            <div class="perf-item">
+              <label>総合計</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-nohin-total" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+            <div class="perf-item">
+              <label>新規</label>
+              <div class="num-stepper perf-stepper">
+                <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+                <input type="number" id="perf-nohin-new" value="0" inputmode="numeric">
+                <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+              </div>
+            </div>
+          </div>
+          <div class="perf-group-notice">※日報には反映されません※報告漏れ確認用です</div>
+        </div>
+      </div>
+      <!-- 月内累計表示 -->
+      <div class="perf-monthly">
+        <div class="perf-monthly-title">月内累計（自動計算・翌月リセット）</div>
+        <div class="perf-monthly-grid">
+          <div class="perf-monthly-group">
+            <div class="perf-monthly-label">客数</div>
+            <div class="perf-monthly-values">
+              <span>総合計 <span class="num" id="perf-month-kyaku-total">0</span></span>
+              <span>新規 <span class="num" id="perf-month-kyaku-new">0</span></span>
+            </div>
+          </div>
+          <div class="perf-monthly-group">
+            <div class="perf-monthly-label">商談</div>
+            <div class="perf-monthly-values">
+              <span>総合計 <span class="num" id="perf-month-shodan-total">0</span></span>
+              <span>新規 <span class="num" id="perf-month-shodan-new">0</span></span>
+            </div>
+          </div>
+          <div class="perf-monthly-group">
+            <div class="perf-monthly-label">試聴</div>
+            <div class="perf-monthly-values">
+              <span>総合計 <span class="num" id="perf-month-shicho-total">0</span></span>
+              <span>新規 <span class="num" id="perf-month-shicho-new">0</span></span>
+            </div>
+          </div>
+          <div class="perf-monthly-group">
+            <div class="perf-monthly-label">契約</div>
+            <div class="perf-monthly-values">
+              <span>総合計 <span class="num" id="perf-month-keiyaku-total">0</span></span>
+              <span>新規 <span class="num" id="perf-month-keiyaku-new">0</span></span>
+            </div>
+          </div>
+          <div class="perf-monthly-group">
+            <div class="perf-monthly-label">契約CAN</div>
+            <div class="perf-monthly-values">
+              <span>総合計 <span class="num" id="perf-month-can-total">0</span></span>
+              <span>新規 <span class="num" id="perf-month-can-new">0</span></span>
+            </div>
+          </div>
+          <div class="perf-monthly-group">
+            <div class="perf-monthly-label">納品</div>
+            <div class="perf-monthly-values">
+              <span>総合計 <span class="num" id="perf-month-nohin-total">0</span></span>
+              <span>新規 <span class="num" id="perf-month-nohin-new">0</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 現在の売上 -->
   <section class="section sales-section" id="sec-sales">
     <div class="section-header sales-header">
       <h2><span class="sales-icon">💎</span>現在の売上</h2>
     </div>
     <div class="section-body sales-body" style="display: block;">
+      <div class="sales-notice">⚠『現在の売上』の数値は独立している為、上部の『客数報告（当日分の数値）』とは連動していません。</div>
       <div class="sales-grid">
         <div class="sales-item">
           <label>今月JA</label>
@@ -1443,10 +1914,6 @@
         <div class="area-title">
           <select class="area-pref-select" id="aichi-pref-select">
             <option value="愛知" selected>愛知</option>
-            <option value="三重">三重</option>
-            <option value="岐阜">岐阜</option>
-            <option value="静岡">静岡</option>
-            <option value="その他">その他</option>
           </select>
           <span class="area-sub-total" id="aichi-subtotal">合計商談 0件</span>
         </div>
@@ -1482,7 +1949,7 @@
   </section>
 
   <!-- 本日の商談 -->
-  <section class="section" id="sec-today">
+  <section class="section collapsed" id="sec-today">
     <div class="section-header" onclick="toggleSection('sec-today')">
       <h2><span class="icon">▶</span>本日の商談</h2>
       <div class="count-badge"><span class="num" id="badge-today">0</span>件</div>
@@ -1492,7 +1959,7 @@
   </section>
 
   <!-- 翌営業日の予定 -->
-  <section class="section" id="sec-next">
+  <section class="section collapsed" id="sec-next">
     <div class="section-header" onclick="toggleSection('sec-next')">
       <h2><span class="icon">▶</span>翌営業日の予定</h2>
       <span class="toggle">▼</span>
@@ -1821,7 +2288,17 @@
     if (el) el.style.display = "none";
   }
 
-  const PREFECTURES = ["愛知", "三重", "岐阜", "静岡", "その他"];
+  const PREFECTURES = [
+    "愛知", "三重", "岐阜", "静岡",
+    "北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島",
+    "茨城", "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川",
+    "新潟", "富山", "石川", "福井", "山梨", "長野",
+    "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山",
+    "鳥取", "島根", "岡山", "広島", "山口",
+    "徳島", "香川", "愛媛", "高知",
+    "福岡", "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄",
+    "その他"
+  ];
 
   const TODAY_CATS = [
     { key: "soudan", label: "相談会", placeholder: "例：JAなごや 中川中部支店 山田様→4/13再訪" },
@@ -2354,6 +2831,55 @@
     return { count, shinki, koukyaku, support };
   }
 
+  // 月内累計のベース値（前日までの累計）。applyPreviousDataで設定
+  let perfMonthlyBase = {
+    kyakuTotal: 0, kyakuNew: 0,
+    shodanTotal: 0, shodanNew: 0,
+    shichoTotal: 0, shichoNew: 0,
+    keiyakuTotal: 0, keiyakuNew: 0,
+    canTotal: 0, canNew: 0,
+    nohinTotal: 0, nohinNew: 0
+  };
+
+  // 月内累計表示を更新（ベース＋当日入力分）
+  function updatePerfMonthly() {
+    const todayMap = {
+      kyakuTotal:   "perf-kyaku-total",
+      kyakuNew:     "perf-kyaku-new",
+      shodanTotal:  "perf-shodan-total",
+      shodanNew:    "perf-shodan-new",
+      shichoTotal:  "perf-shicho-total",
+      shichoNew:    "perf-shicho-new",
+      keiyakuTotal: "perf-keiyaku-total",
+      keiyakuNew:   "perf-keiyaku-new",
+      canTotal:     "perf-can-total",
+      canNew:       "perf-can-new",
+      nohinTotal:   "perf-nohin-total",
+      nohinNew:     "perf-nohin-new"
+    };
+    const displayMap = {
+      kyakuTotal:   "perf-month-kyaku-total",
+      kyakuNew:     "perf-month-kyaku-new",
+      shodanTotal:  "perf-month-shodan-total",
+      shodanNew:    "perf-month-shodan-new",
+      shichoTotal:  "perf-month-shicho-total",
+      shichoNew:    "perf-month-shicho-new",
+      keiyakuTotal: "perf-month-keiyaku-total",
+      keiyakuNew:   "perf-month-keiyaku-new",
+      canTotal:     "perf-month-can-total",
+      canNew:       "perf-month-can-new",
+      nohinTotal:   "perf-month-nohin-total",
+      nohinNew:     "perf-month-nohin-new"
+    };
+    Object.keys(todayMap).forEach(key => {
+      const todayEl = document.getElementById(todayMap[key]);
+      const todayVal = todayEl ? (parseInt(todayEl.value) || 0) : 0;
+      const total = (perfMonthlyBase[key] || 0) + todayVal;
+      const disp = document.getElementById(displayMap[key]);
+      if (disp) disp.textContent = formatNumDisplay(total);
+    });
+  }
+
   function updateAllCounts() {
     // 本日の商談
     const todayCount = Array.from(document.querySelectorAll(".today-sub-item textarea"))
@@ -2578,15 +3104,19 @@
     updateAllCounts();
   }
 
+  // エリア内在庫データ（メール本文構築時に使用）
+  let areaStocksData = [];
+
   // ===== 報告者変更時の処理 =====
   async function onUserChanged() {
     const userName = document.getElementById("userSelect").value;
     showLoading(userName + " さんのデータを読込中...");
     try {
-      const result = await gasGet({ action: "getPrev", user: userName });
+      const result = await gasGet({ action: "getUserData", user: userName });
       if (result && result.success) {
         applyPreviousData(result.previousData);
         applyUserInfo(result.userInfo);
+        areaStocksData = Array.isArray(result.areaStocks) ? result.areaStocks : [];
       }
     } catch (err) {
       showToast("データ取得に失敗しました: " + err.message);
@@ -2624,6 +3154,49 @@
     if (elJA) elJA.value = Number(sales.thisJA) || 0;
     if (elSk) elSk.value = Number(sales.thisSeikyo) || 0;
     if (elNx) elNx.value = Number(sales.nextMonth) || 0;
+
+    // 実績件数（当日分）：常に0スタート（前日引継しない）
+    [
+      "perf-kyaku-total", "perf-kyaku-new",
+      "perf-shodan-total", "perf-shodan-new",
+      "perf-shicho-total", "perf-shicho-new",
+      "perf-keiyaku-total", "perf-keiyaku-new",
+      "perf-can-total", "perf-can-new",
+      "perf-nohin-total", "perf-nohin-new"
+    ].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = 0;
+    });
+
+    // 月内累計：同月内は前日累計＋前日当日分を引き継ぐ、月跨ぎでリセット
+    // 客数・商談・試聴・契約・契約CAN・納品の6項目
+    const perfMonthly = prev.perfMonthly || {};
+    if (prev.sameMonth) {
+      perfMonthlyBase = {
+        kyakuTotal:   Number(perfMonthly.kyakuTotal)   || 0,
+        kyakuNew:     Number(perfMonthly.kyakuNew)     || 0,
+        shodanTotal:  Number(perfMonthly.shodanTotal)  || 0,
+        shodanNew:    Number(perfMonthly.shodanNew)    || 0,
+        shichoTotal:  Number(perfMonthly.shichoTotal)  || 0,
+        shichoNew:    Number(perfMonthly.shichoNew)    || 0,
+        keiyakuTotal: Number(perfMonthly.keiyakuTotal) || 0,
+        keiyakuNew:   Number(perfMonthly.keiyakuNew)   || 0,
+        canTotal:     Number(perfMonthly.canTotal)     || 0,
+        canNew:       Number(perfMonthly.canNew)       || 0,
+        nohinTotal:   Number(perfMonthly.nohinTotal)   || 0,
+        nohinNew:     Number(perfMonthly.nohinNew)     || 0
+      };
+    } else {
+      perfMonthlyBase = {
+        kyakuTotal: 0, kyakuNew: 0,
+        shodanTotal: 0, shodanNew: 0,
+        shichoTotal: 0, shichoNew: 0,
+        keiyakuTotal: 0, keiyakuNew: 0,
+        canTotal: 0, canNew: 0,
+        nohinTotal: 0, nohinNew: 0
+      };
+    }
+    updatePerfMonthly();
     // 県セレクト
     if (prev.aichiPref) {
       const ps = document.getElementById("aichi-pref-select");
@@ -2742,10 +3315,28 @@
   // ===== 全入力リセット =====
   function resetAllInputs() {
     document.querySelectorAll("input[data-key]").forEach(i => i.value = 0);
-    ["sales-this-ja", "sales-this-seikyo", "sales-next-month"].forEach(id => {
+    [
+      "sales-this-ja", "sales-this-seikyo", "sales-next-month",
+      "perf-kyaku-total", "perf-kyaku-new",
+      "perf-shodan-total", "perf-shodan-new",
+      "perf-shicho-total", "perf-shicho-new",
+      "perf-keiyaku-total", "perf-keiyaku-new",
+      "perf-can-total", "perf-can-new",
+      "perf-nohin-total", "perf-nohin-new"
+    ].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = 0;
     });
+    // 月内累計ベースもリセット
+    perfMonthlyBase = {
+      kyakuTotal: 0, kyakuNew: 0,
+      shodanTotal: 0, shodanNew: 0,
+      shichoTotal: 0, shichoNew: 0,
+      keiyakuTotal: 0, keiyakuNew: 0,
+      canTotal: 0, canNew: 0,
+      nohinTotal: 0, nohinNew: 0
+    };
+    updatePerfMonthly();
     clearAllLists();
     document.getElementById("stock-list").innerHTML = "";
   }
@@ -2815,6 +3406,27 @@
           }
           onUserChanged();
         });
+
+        // エリア・事業部は固定値（hidden input）のため、復元・保存処理は不要
+
+        // 県プルダウン（aichi-pref-select）に全国都道府県を反映
+        try {
+          const aichiPrefSel = document.getElementById("aichi-pref-select");
+          if (aichiPrefSel) {
+            const currentVal = aichiPrefSel.value || "愛知";
+            aichiPrefSel.innerHTML = "";
+            PREFECTURES.forEach(p => {
+              const opt = document.createElement("option");
+              opt.value = p;
+              opt.textContent = p;
+              if (p === currentVal) opt.selected = true;
+              aichiPrefSel.appendChild(opt);
+            });
+          }
+        } catch (e) {
+          console.warn("県プルダウン初期化エラー:", e);
+        }
+
         // 最初の社員のデータを読み込む
         if (users.length > 0) {
           await onUserChanged();
@@ -2835,6 +3447,17 @@
   }
   loadInitial();
 
+  // 客数報告（当日分）の入力時、月内累計表示をリアルタイム更新
+  ["perf-kyaku-total", "perf-kyaku-new",
+   "perf-shodan-total", "perf-shodan-new",
+   "perf-shicho-total", "perf-shicho-new",
+   "perf-keiyaku-total", "perf-keiyaku-new",
+   "perf-can-total", "perf-can-new",
+   "perf-nohin-total", "perf-nohin-new"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("input", updatePerfMonthly);
+  });
+
   // ===== レポート組み立て =====
   function buildReport() {
     const v = (key) => {
@@ -2851,8 +3474,23 @@
     report += "《送信専用》 稼働状況報告アプリより自動配信\n\n";
     report += "━━━━━━━━━━━━━━━━━━━━━\n";
     report += `  【最終報告】 ${rDateStr}\n`;
+    const divisionV = document.getElementById("divisionSelect").value || "";
+    const areaV = document.getElementById("areaSelect").value || "";
+    report += `  事業部：${divisionV || "（未設定）"}　エリア：${areaV || "（未設定）"}\n`;
     report += `  報告者：${document.getElementById("userSelect").value}\n`;
     report += "━━━━━━━━━━━━━━━━━━━━━\n\n";
+
+    // 月内累計（客数報告セクションは表示せず、月内累計のみ）
+    const pv = (id) => parseInt(document.getElementById(id).value) || 0;
+    const mTotal = (key, todayId) => formatNumDisplay((perfMonthlyBase[key] || 0) + pv(todayId));
+    report += "【月内累計】※NIC日報へ反映される数値※\n";
+    report += "─────────────────────\n";
+    report += `客数    総合計 ${mTotal("kyakuTotal","perf-kyaku-total")}  /  新規 ${mTotal("kyakuNew","perf-kyaku-new")}\n`;
+    report += `商談    総合計 ${mTotal("shodanTotal","perf-shodan-total")}  /  新規 ${mTotal("shodanNew","perf-shodan-new")}\n`;
+    report += `試聴    総合計 ${mTotal("shichoTotal","perf-shicho-total")}  /  新規 ${mTotal("shichoNew","perf-shicho-new")}\n`;
+    report += `契約    総合計 ${mTotal("keiyakuTotal","perf-keiyaku-total")}  /  新規 ${mTotal("keiyakuNew","perf-keiyaku-new")}\n`;
+    report += `契約CAN 総合計 ${mTotal("canTotal","perf-can-total")}  /  新規 ${mTotal("canNew","perf-can-new")}\n`;
+    report += `納品    総合計 ${mTotal("nohinTotal","perf-nohin-total")}  /  新規 ${mTotal("nohinNew","perf-nohin-new")}　※日報非反映・報告漏れ確認用※\n\n`;
 
     // 現在の売上
     const salesJA = parseInt(document.getElementById("sales-this-ja").value) || 0;
@@ -2885,16 +3523,23 @@
 
     report += "【本日の商談】\n";
     report += "─────────────────────\n";
-    TODAY_CATS.forEach(cat => {
-      const items = Array.from(document.querySelectorAll(`#today-${cat.key}-list textarea`))
-        .map(t => t.value.trim()).filter(t => t.length > 0);
-      report += `${cat.label}\n`;
-      if (items.length === 0) {
-        report += `  ・\n`;
-      } else {
-        items.forEach(t => report += `  ・${t}\n`);
-      }
-    });
+    // 全カテゴリのアイテム集計
+    const todayItemsByCategory = TODAY_CATS.map(cat => ({
+      label: cat.label,
+      items: Array.from(document.querySelectorAll(`#today-${cat.key}-list textarea`))
+        .map(t => t.value.trim()).filter(t => t.length > 0)
+    }));
+    const todayHasAny = todayItemsByCategory.some(c => c.items.length > 0);
+    if (todayHasAny) {
+      todayItemsByCategory.forEach(c => {
+        report += `${c.label}\n`;
+        if (c.items.length === 0) {
+          report += `  ・\n`;
+        } else {
+          c.items.forEach(t => report += `  ・${t}\n`);
+        }
+      });
+    }
     report += "\n";
 
     report += `【翌営業日の予定】${nextDateStr}\n`;
@@ -3159,13 +3804,50 @@
       report += "\n";
     });
 
-    report += "【在庫】\n";
-    report += "─────────────────────\n";
-    Array.from(document.querySelectorAll("#stock-list input"))
+    // 在庫：自分の在庫
+    const selfUserName = document.getElementById("userSelect").value;
+    const selfStock = Array.from(document.querySelectorAll("#stock-list input"))
       .map(i => i.value.trim())
-      .filter(t => t.length > 0)
-      .forEach(t => report += `${t}\n`);
+      .filter(t => t.length > 0);
 
+    report += "【報告者の在庫】\n";
+    report += "─────────────────────\n";
+    if (selfStock.length === 0) {
+      report += "（記入なし）\n";
+    } else {
+      selfStock.forEach(t => report += `${t}\n`);
+    }
+    report += "\n";
+
+    // 在庫：エリア内他社員
+    report += "【エリア内の在庫】\n";
+    report += "─────────────────────\n";
+    if (!Array.isArray(areaStocksData) || areaStocksData.length === 0) {
+      report += "（データなし）\n";
+    } else {
+      // 自分以外を抽出
+      const others = areaStocksData.filter(s => s && s.name && s.name !== selfUserName);
+      if (others.length === 0) {
+        report += "（同エリアの他社員データなし）\n";
+      } else {
+        others.forEach(s => {
+          // 名前行：「（最終M/D）」または「（未報告）」を付ける
+          let nameLine = `■${s.name}`;
+          if (!s.hasRecord) {
+            nameLine += "（未報告）";
+          } else {
+            nameLine += `（最終${s.lastReportDate || "-"}）`;
+          }
+          report += `${nameLine}\n`;
+          if (s.stock && s.stock.length > 0) {
+            s.stock.forEach(t => report += `${t}\n`);
+          } else {
+            report += "（在庫なし）\n";
+          }
+          report += "\n";
+        });
+      }
+    }
     report += "\n━━━━━━━━━━━━━━━━━━━━━\n";
     report += `【発信元】(株)NICヒアリング 中部エリア　報告者：${document.getElementById("userSelect").value}\n\n`;
     report += "本メールは《送信専用》稼働状況報告アプリより自動配信されております。\n";
@@ -3321,9 +4003,47 @@
       nextMonth: parseInt(document.getElementById("sales-next-month").value) || 0
     };
 
+    // 実績件数（当日分）
+    const perf = {
+      kyakuTotal: parseInt(document.getElementById("perf-kyaku-total").value) || 0,
+      kyakuNew: parseInt(document.getElementById("perf-kyaku-new").value) || 0,
+      shodanTotal: parseInt(document.getElementById("perf-shodan-total").value) || 0,
+      shodanNew: parseInt(document.getElementById("perf-shodan-new").value) || 0,
+      shichoTotal: parseInt(document.getElementById("perf-shicho-total").value) || 0,
+      shichoNew: parseInt(document.getElementById("perf-shicho-new").value) || 0,
+      keiyakuTotal: parseInt(document.getElementById("perf-keiyaku-total").value) || 0,
+      keiyakuNew: parseInt(document.getElementById("perf-keiyaku-new").value) || 0,
+      canTotal: parseInt(document.getElementById("perf-can-total").value) || 0,
+      canNew: parseInt(document.getElementById("perf-can-new").value) || 0,
+      nohinTotal: parseInt(document.getElementById("perf-nohin-total").value) || 0,
+      nohinNew: parseInt(document.getElementById("perf-nohin-new").value) || 0
+    };
+
+    // 月内累計（ベース＋当日分）：客数・商談・試聴・契約・契約CAN・納品の6項目
+    const perfMonthly = {
+      kyakuTotal:   (perfMonthlyBase.kyakuTotal || 0)   + perf.kyakuTotal,
+      kyakuNew:     (perfMonthlyBase.kyakuNew || 0)     + perf.kyakuNew,
+      shodanTotal:  (perfMonthlyBase.shodanTotal || 0)  + perf.shodanTotal,
+      shodanNew:    (perfMonthlyBase.shodanNew || 0)    + perf.shodanNew,
+      shichoTotal:  (perfMonthlyBase.shichoTotal || 0)  + perf.shichoTotal,
+      shichoNew:    (perfMonthlyBase.shichoNew || 0)    + perf.shichoNew,
+      keiyakuTotal: (perfMonthlyBase.keiyakuTotal || 0) + perf.keiyakuTotal,
+      keiyakuNew:   (perfMonthlyBase.keiyakuNew || 0)   + perf.keiyakuNew,
+      canTotal:     (perfMonthlyBase.canTotal || 0)     + perf.canTotal,
+      canNew:       (perfMonthlyBase.canNew || 0)       + perf.canNew,
+      nohinTotal:   (perfMonthlyBase.nohinTotal || 0)   + perf.nohinTotal,
+      nohinNew:     (perfMonthlyBase.nohinNew || 0)     + perf.nohinNew
+    };
+
+    // エリア・事業部
+    const division = document.getElementById("divisionSelect").value || "";
+    const area = document.getElementById("areaSelect").value || "";
+
     return {
       action: "submit",
       user: document.getElementById("userSelect").value,
+      division,
+      area,
       reportDate: document.getElementById("reportDate").value,
       counts,
       today,
@@ -3332,6 +4052,8 @@
       aichiPref,
       totalCount,
       sales,
+      perf,
+      perfMonthly,
       meet,
       raijo,
       respJA,
