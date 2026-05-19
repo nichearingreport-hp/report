@@ -1042,6 +1042,17 @@
     font-size: 14px;
     background: var(--white);
   }
+  .next-day-weekday {
+    background: var(--fuchsia);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 6px;
+    min-width: 32px;
+    text-align: center;
+    display: inline-block;
+  }
   .next-free { margin-top: 6px; }
   .next-free label {
     display: block;
@@ -1896,7 +1907,7 @@
   </section>
 
   <!-- 商談件数 月間累計 -->
-  <section class="section" id="sec-count">
+  <section class="section collapsed" id="sec-count">
     <div class="section-header" onclick="toggleSection('sec-count')">
       <h2><span class="icon">▶</span>商談件数 月間累計<span class="inherit-badge">前日引継</span></h2>
       <div class="count-badge"><span class="num" id="badge-count">0</span>件</div>
@@ -1968,6 +1979,7 @@
       <div class="next-day">
         <label>営業日</label>
         <input type="date" id="nextDate">
+        <span class="next-day-weekday" id="nextDateWeekday"></span>
       </div>
       <div class="next-free">
         <label>予定内容(自由記入)</label>
@@ -2332,8 +2344,26 @@
     if (next.getDay() === 0) next.setDate(next.getDate() + 1);
     if (next.getDay() === 6) next.setDate(next.getDate() + 2);
     document.getElementById("nextDate").value = next.toISOString().split("T")[0];
+    updateNextWeekday();
   }
   updateDate();
+
+  // 翌営業日の曜日表示更新
+  function updateNextWeekday() {
+    const el = document.getElementById("nextDate");
+    const display = document.getElementById("nextDateWeekday");
+    if (!el || !display) return;
+    const v = el.value;
+    if (!v) { display.textContent = ""; return; }
+    const parts = v.split("-");
+    if (parts.length !== 3) { display.textContent = ""; return; }
+    const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    const dow = ["日","月","火","水","木","金","土"][d.getDay()];
+    display.textContent = `(${dow})`;
+  }
+  // 日付変更時に連動
+  document.getElementById("nextDate").addEventListener("change", updateNextWeekday);
+  updateNextWeekday();
 
   function toggleSection(id) { document.getElementById(id).classList.toggle("collapsed"); }
   function toggleSubSection(id) { document.getElementById(id).classList.toggle("collapsed"); }
@@ -3112,7 +3142,8 @@
     const userName = document.getElementById("userSelect").value;
     showLoading(userName + " さんのデータを読込中...");
     try {
-      const result = await gasGet({ action: "getUserData", user: userName });
+      const division = (document.getElementById("divisionSelect") || {}).value || "";
+      const result = await gasGet({ action: "getUserData", user: userName, division: division });
       if (result && result.success) {
         applyPreviousData(result.previousData);
         applyUserInfo(result.userInfo);
@@ -3468,7 +3499,15 @@
     const rDateStr = reportDate ? reportDate.replace(/-/g, "/") : "";
     const grandTotal = document.getElementById("totalDisplay").textContent;
     const nextDate = document.getElementById("nextDate").value;
-    const nextDateStr = nextDate ? `${parseInt(nextDate.split("-")[1])}/${parseInt(nextDate.split("-")[2])}` : "";
+    let nextDateStr = "";
+    if (nextDate) {
+      const _parts = nextDate.split("-");
+      if (_parts.length === 3) {
+        const _d = new Date(parseInt(_parts[0]), parseInt(_parts[1]) - 1, parseInt(_parts[2]));
+        const _dow = ["日","月","火","水","木","金","土"][_d.getDay()];
+        nextDateStr = `${parseInt(_parts[1])}/${parseInt(_parts[2])}(${_dow})`;
+      }
+    }
 
     let report = "";
     report += "《送信専用》 稼働状況報告アプリより自動配信\n\n";
@@ -3539,6 +3578,8 @@
           c.items.forEach(t => report += `  ・${t}\n`);
         }
       });
+    } else {
+      report += "（記入なし）\n";
     }
     report += "\n";
 
