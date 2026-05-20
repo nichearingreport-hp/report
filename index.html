@@ -3512,18 +3512,18 @@
     let report = "";
     report += "《送信専用》 稼働状況報告アプリより自動配信\n\n";
     report += "━━━━━━━━━━━━━━━━━━━━━\n";
-    report += `  【最終報告】 ${rDateStr}\n`;
+    report += `【最終報告】 ${rDateStr}\n`;
     const divisionV = document.getElementById("divisionSelect").value || "";
     const areaV = document.getElementById("areaSelect").value || "";
-    report += `  事業部：${divisionV || "（未設定）"}　エリア：${areaV || "（未設定）"}\n`;
-    report += `  報告者：${document.getElementById("userSelect").value}\n`;
+    report += `事業部：${divisionV || "（未設定）"}　エリア：${areaV || "（未設定）"}\n`;
+    report += `報告者：${document.getElementById("userSelect").value}\n`;
     report += "━━━━━━━━━━━━━━━━━━━━━\n\n";
 
     // 月内累計（客数報告セクションは表示せず、月内累計のみ）
     const pv = (id) => parseInt(document.getElementById(id).value) || 0;
     const mTotal = (key, todayId) => formatNumDisplay((perfMonthlyBase[key] || 0) + pv(todayId));
-    report += "【月内累計】※NIC日報へ反映される数値※\n";
-    report += "─────────────────────\n";
+    report += "【月内累計】（=日報数値）\n";
+    report += "───────\n";
     report += `客数    総合計 ${mTotal("kyakuTotal","perf-kyaku-total")}  /  新規 ${mTotal("kyakuNew","perf-kyaku-new")}\n`;
     report += `商談    総合計 ${mTotal("shodanTotal","perf-shodan-total")}  /  新規 ${mTotal("shodanNew","perf-shodan-new")}\n`;
     report += `試聴    総合計 ${mTotal("shichoTotal","perf-shicho-total")}  /  新規 ${mTotal("shichoNew","perf-shicho-new")}\n`;
@@ -3536,7 +3536,7 @@
     const salesSeikyo = parseInt(document.getElementById("sales-this-seikyo").value) || 0;
     const salesNext = parseInt(document.getElementById("sales-next-month").value) || 0;
     report += `【現在の売上】 今月JA ${formatNumDisplay(salesJA)}台、生協 ${formatNumDisplay(salesSeikyo)}台 / 来月繰越 ${formatNumDisplay(salesNext)}台\n`;
-    report += "─────────────────────\n\n";
+    report += "───────\n\n";
 
     const aichiPref = document.getElementById("aichi-pref-select").value;
     // 内訳計算（プレビュー用）
@@ -3554,14 +3554,14 @@
     // 月間累計用の数値表示ヘルパー
     const vd = (key) => formatNumDisplay(v(key));
     report += `【商談件数 月間累計】 ${formatNumDisplay(grandTotal)}件\n`;
-    report += "─────────────────────\n";
+    report += "───────\n";
     report += `《${aichiPref}》　合計商談 ${formatNumDisplay(aichiSum)}件 (新規${formatNumDisplay(aichiShinki)}件、リピート${formatNumDisplay(aichiRepeat)}件、その他${formatNumDisplay(aichiOther)}件)\n`;
     report += `  相談会 ${vd("aichi-soudan")}　返信 ${vd("aichi-henshin")}　問合 ${vd("aichi-toiawase")}　J紹 ${vd("aichi-jsho")}　客紹 ${vd("aichi-kakusho")}　追買 ${vd("aichi-tsuikai")}　SO ${vd("aichi-so")}　その他 ${vd("aichi-other")}件\n`;
     report += `《生協》　合計商談 ${formatNumDisplay(seikyoSum)}件 (新規${formatNumDisplay(seikyoShinki)}件、リピート${formatNumDisplay(seikyoRepeat)}件、その他${formatNumDisplay(seikyoOther)}件)\n`;
     report += `  相談会 ${vd("seikyo-soudan")}　返信 ${vd("seikyo-henshin")}　問合 ${vd("seikyo-toiawase")}　${seikyoJshoLabel} ${vd("seikyo-jsho")}　客紹 ${vd("seikyo-kakusho")}　追買 ${vd("seikyo-tsuikai")}　SO ${vd("seikyo-so")}　その他 ${vd("seikyo-other")}件\n\n`;
 
     report += "【本日の商談】\n";
-    report += "─────────────────────\n";
+    report += "───────\n";
     // 全カテゴリのアイテム集計
     const todayItemsByCategory = TODAY_CATS.map(cat => ({
       label: cat.label,
@@ -3584,7 +3584,7 @@
     report += "\n";
 
     report += `【翌営業日の予定】${nextDateStr}\n`;
-    report += "─────────────────────\n";
+    report += "───────\n";
     const nextFree = v("next-free").trim();
     report += nextFree ? nextFree + "\n\n" : "（記入なし）\n\n";
 
@@ -3733,7 +3733,7 @@
     const meetKou = parseInt(document.getElementById("badge-meet-koukyaku").textContent) || 0;
     const meetSupport = parseInt((document.getElementById("badge-meet-support") || {}).textContent || "0") || 0;
     report += `【今月の相談会】 JA${meetTotal}会場（内サポ会場 ${meetSupport}）、JA新規${meetShinki}名、JA顧客${meetKou}名\n`;
-    report += "─────────────────────\n";
+    report += "───────\n";
     const meetData = collectMeetBlocks("meet");
     meetData.forEach(({pref, items, totalShinki, totalKou}) => {
       report += `《${pref}》　${items.length}会場 新規${totalShinki}名・顧客${totalKou}名\n`;
@@ -3782,7 +3782,7 @@
       return { ja, seikyo };
     })();
     report += `【新規---来場】 JA※${raijoStats.ja.astTotal}件・JA今月${raijoStats.ja.numTotal}件（内サポAPO ${raijoStats.ja.supportApo}件）\n`;
-    report += "─────────────────────\n";
+    report += "───────\n";
     const raijoData = collectPrefBlocks("raijo");
     raijoData.forEach(({pref, items}) => {
       report += `《${pref}》\n`;
@@ -3805,7 +3805,7 @@
       const num = r1.numbered + r2.numbered + r3.numbered + r4.numbered;
       return `※${ast}件・今月${num}件`;
     })() + "\n";
-    report += "─────────────────────\n";
+    report += "───────\n";
     const respSubs = [
       { type: "respH", title: "■ JA新規---返信", breakdownId: null },
       { type: "respT", title: "■ JA新規---問合", breakdownId: null },
@@ -3829,7 +3829,7 @@
       const r = countTypesList(["srespH-list", "srespT-list", "srespJ-list", "srespS-list"]);
       return `※${r.asterisk}件・今月${r.numbered}件`;
     })() + "\n";
-    report += "─────────────────────\n";
+    report += "───────\n";
     const srespSubs2 = [
       { id: "srespH-list", title: "■ 生協新規---返信", breakdownId: null },
       { id: "srespT-list", title: "■ 生協新規---問合", breakdownId: null },
@@ -3852,7 +3852,7 @@
       .filter(t => t.length > 0);
 
     report += "【報告者の在庫】\n";
-    report += "─────────────────────\n";
+    report += "───────\n";
     if (selfStock.length === 0) {
       report += "（記入なし）\n";
     } else {
@@ -3862,7 +3862,7 @@
 
     // 在庫：エリア内他社員
     report += "【エリア内の在庫】\n";
-    report += "─────────────────────\n";
+    report += "───────\n";
     if (!Array.isArray(areaStocksData) || areaStocksData.length === 0) {
       report += "（データなし）\n";
     } else {
