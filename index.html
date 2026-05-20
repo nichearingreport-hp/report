@@ -495,10 +495,32 @@
     color: var(--fuchsia);
     font-size: 11px;
     font-weight: 700;
-    padding: 5px 8px;
+    padding: 6px 8px;
     margin-bottom: 8px;
     border-radius: 4px;
     letter-spacing: 0.02em;
+    line-height: 1.4;
+  }
+  .perf-notice > div {
+    margin-bottom: 2px;
+  }
+  .perf-notice > div:last-child {
+    margin-bottom: 0;
+  }
+  .perf-notice-sub {
+    margin-top: 4px !important;
+    padding-top: 4px;
+    border-top: 1px dashed rgba(199, 21, 133, 0.3);
+  }
+  .perf-notice-example {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--navy);
+    background: rgba(255,255,255,0.6);
+    padding: 3px 6px;
+    border-radius: 3px;
+    margin-top: 3px !important;
+    line-height: 1.4;
   }
   .perf-grid {
     display: grid;
@@ -1686,7 +1708,11 @@
       <span class="toggle">▼</span>
     </div>
     <div class="section-body perf-body">
-      <div class="perf-notice">⚠ この項目の数値が日報へ反映されます</div>
+      <div class="perf-notice">
+        <div>⚠ この項目の数値が日報へ反映されます</div>
+        <div class="perf-notice-sub">⚠ 同日内に再送信する場合は、前回送信後に追加発生した分のみ入力</div>
+        <div class="perf-notice-example">（例：本日1回目に客数3を送信済 → 1の漏れがあった → 本日2回目「1」のみ入力／「4」と入れない）</div>
+      </div>
       <div class="perf-grid">
         <div class="perf-group">
           <div class="perf-group-title">客数</div>
