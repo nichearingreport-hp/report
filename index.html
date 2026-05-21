@@ -3597,10 +3597,9 @@
     const todayHasAny = todayItemsByCategory.some(c => c.items.length > 0);
     if (todayHasAny) {
       todayItemsByCategory.forEach(c => {
-        report += `${c.label}\n`;
-        if (c.items.length === 0) {
-          report += `  ・\n`;
-        } else {
+        // 入力があったカテゴリのみ表示
+        if (c.items.length > 0) {
+          report += `${c.label}\n`;
           c.items.forEach(t => report += `  ・${t}\n`);
         }
       });
