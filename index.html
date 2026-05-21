@@ -4046,11 +4046,9 @@
         report += "（同エリアの他社員データなし）\n";
       } else {
         others.forEach(s => {
-          // 名前行：「（最終M/D）」または「（未報告）」を付ける
+          // 名前行：報告ありは「（最終M/D）」、未報告はカッコなし
           let nameLine = `■${s.name}`;
-          if (!s.hasRecord) {
-            nameLine += "（未報告）";
-          } else {
+          if (s.hasRecord) {
             nameLine += `（最終${s.lastReportDate || "-"}）`;
           }
           report += `${nameLine}\n`;
