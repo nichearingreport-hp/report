@@ -1101,6 +1101,27 @@
     background: var(--white);
     box-shadow: 0 0 0 3px rgba(0,176,221,0.1);
   }
+  /* メモ欄 */
+  .memo-area { width: 100%; }
+  .memo-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px 12px;
+    border: 1px solid var(--gray);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: vertical;
+    background: var(--beige-light);
+    box-sizing: border-box;
+  }
+  .memo-textarea:focus {
+    outline: none;
+    border-color: var(--turquoise);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(0,176,221,0.1);
+  }
 
   .list-area { margin-bottom: 16px; }
   .list-area-title {
@@ -1993,6 +2014,19 @@
       <span class="toggle">▼</span>
     </div>
     <div class="section-body" id="today-body"></div>
+  </section>
+
+  <!-- メモ -->
+  <section class="section collapsed" id="sec-memo">
+    <div class="section-header" onclick="toggleSection('sec-memo')">
+      <h2><span class="icon">▶</span>メモ</h2>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="memo-area">
+        <textarea id="memo-text" class="memo-textarea" placeholder="自由記入欄（連絡事項・気付き・申し送りなど）" rows="4"></textarea>
+      </div>
+    </div>
   </section>
 
   <!-- 翌営業日の予定 -->
@@ -3174,6 +3208,8 @@
         applyPreviousData(result.previousData);
         applyUserInfo(result.userInfo);
         areaStocksData = Array.isArray(result.areaStocks) ? result.areaStocks : [];
+        // 当日の下書きがあれば復元（本日の商談・メモ・翌営業日の予定）
+        restoreDraft();
       }
     } catch (err) {
       showToast("データ取得に失敗しました: " + err.message);
@@ -3335,6 +3371,10 @@
       (prev.stock || []).forEach(t => addStock(t));
     }
 
+    // メモは前日引継しない（毎回空）
+    const memoEl = document.getElementById("memo-text");
+    if (memoEl) memoEl.value = "";
+
     renumberAll();
     updateAllCounts();
   }
@@ -3396,6 +3436,9 @@
     updatePerfMonthly();
     clearAllLists();
     document.getElementById("stock-list").innerHTML = "";
+    // メモは毎回クリア（前日引継しない）
+    const memoEl = document.getElementById("memo-text");
+    if (memoEl) memoEl.value = "";
   }
 
   function clearAllLists() {
@@ -3410,6 +3453,105 @@
       if (el) el.innerHTML = "";
     });
     document.getElementById("stock-list").innerHTML = "";
+  }
+
+  // ===== 当日下書き保存（localStorage） =====
+  // 本日の商談・メモ・翌営業日の予定を、報告者ごと＋日付ごとに端末保存
+  // 同日中は復元、翌日はクリア
+
+  function getDraftKey() {
+    const user = (document.getElementById("userSelect") || {}).value || "_";
+    return "draft_" + user;
+  }
+
+  function getTodayDateStr() {
+    const n = new Date();
+    return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`;
+  }
+
+  // 現在の入力内容を下書きとして保存
+  function saveDraft() {
+    try {
+      // 本日の商談（カテゴリごとのテキスト配列）
+      const todayData = {};
+      TODAY_CATS.forEach(cat => {
+        const items = Array.from(document.querySelectorAll(`#today-${cat.key}-list textarea`))
+          .map(t => t.value)
+          .filter(t => t.trim().length > 0);
+        if (items.length > 0) todayData[cat.key] = items;
+      });
+      const draft = {
+        date: getTodayDateStr(),
+        today: todayData,
+        memo: (document.getElementById("memo-text") || {}).value || "",
+        nextFree: (document.querySelector('[data-key="next-free"]') || {}).value || ""
+      };
+      localStorage.setItem(getDraftKey(), JSON.stringify(draft));
+    } catch (e) {
+      console.warn("下書き保存エラー:", e);
+    }
+  }
+
+  // 下書きを復元（同日のみ。翌日ならクリア）
+  function restoreDraft() {
+    try {
+      const raw = localStorage.getItem(getDraftKey());
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      // 日付が違う（翌日以降）ならクリアして終了
+      if (!draft.date || draft.date !== getTodayDateStr()) {
+        localStorage.removeItem(getDraftKey());
+        return;
+      }
+      // 本日の商談を復元
+      if (draft.today) {
+        TODAY_CATS.forEach(cat => {
+          const items = draft.today[cat.key];
+          if (items && items.length > 0) {
+            const list = document.getElementById(`today-${cat.key}-list`);
+            if (list) {
+              list.innerHTML = "";
+              items.forEach(t => addTodayItem(cat.key, t));
+            }
+          }
+        });
+      }
+      // メモを復元
+      if (draft.memo) {
+        const memoEl = document.getElementById("memo-text");
+        if (memoEl) memoEl.value = draft.memo;
+      }
+      // 翌営業日の予定を復元
+      if (draft.nextFree) {
+        const nf = document.querySelector('[data-key="next-free"]');
+        if (nf) nf.value = draft.nextFree;
+      }
+      updateAllCounts();
+    } catch (e) {
+      console.warn("下書き復元エラー:", e);
+    }
+  }
+
+  // 下書きをクリア（送信完了時に呼ぶ）
+  function clearDraft() {
+    try {
+      localStorage.removeItem(getDraftKey());
+    } catch (e) {}
+  }
+
+  // 入力時に自動保存するリスナーを設定
+  function setupDraftAutoSave() {
+    document.addEventListener("input", (e) => {
+      const t = e.target;
+      if (!t) return;
+      // 本日の商談・メモ・翌営業日の予定の入力欄のみ対象
+      const isToday = t.closest && t.closest(".today-sub-list");
+      const isMemo = t.id === "memo-text";
+      const isNextFree = t.dataset && t.dataset.key === "next-free";
+      if (isToday || isMemo || isNextFree) {
+        saveDraft();
+      }
+    });
   }
 
   // ===== 起動時：社員一覧取得＋初期社員のデータ取得 =====
@@ -3503,6 +3645,9 @@
     }
   }
   loadInitial();
+
+  // 当日下書きの自動保存リスナーをセットアップ
+  setupDraftAutoSave();
 
   // 客数報告（当日分）の入力時、月内累計表示をリアルタイム更新
   ["perf-kyaku-total", "perf-kyaku-new",
@@ -3603,15 +3748,19 @@
           c.items.forEach(t => report += `  ・${t}\n`);
         }
       });
-    } else {
-      report += "（記入なし）\n";
     }
     report += "\n";
+
+    // メモ
+    const memoText = (document.getElementById("memo-text") || {}).value || "";
+    report += "【メモ】\n";
+    report += "───────\n";
+    report += memoText.trim() ? memoText.trim() + "\n\n" : "\n";
 
     report += `【翌営業日の予定】${nextDateStr}\n`;
     report += "───────\n";
     const nextFree = v("next-free").trim();
-    report += nextFree ? nextFree + "\n\n" : "（記入なし）\n\n";
+    report += nextFree ? nextFree + "\n\n" : "\n";
 
     // プルダウン値を本文に組み込むヘルパー
     const formatItemText = (item, txt) => {
@@ -3879,7 +4028,7 @@
     report += "【報告者の在庫】\n";
     report += "───────\n";
     if (selfStock.length === 0) {
-      report += "（記入なし）\n";
+      report += "（在庫なし）\n";
     } else {
       selfStock.forEach(t => report += `${t}\n`);
     }
@@ -4115,6 +4264,7 @@
       today,
       nextDate: nextDateStr,
       nextFree,
+      memo: (document.getElementById("memo-text") || {}).value || "",
       aichiPref,
       totalCount,
       sales,
