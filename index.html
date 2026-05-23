@@ -3681,7 +3681,7 @@
     }
 
     let report = "";
-    report += "《送信専用》 稼働状況報告アプリより自動配信\n\n";
+    report += "《送信専用》 稼働状況報告アプリより自動配信\nお問い合わせは報告者まで直接ご返信・ご連絡くださいますようお願い申し上げます。\n\n";
     report += "━━━━━━━━━━━━━━━━━━━━━\n";
     report += `【最終報告】 ${rDateStr}\n`;
     const divisionV = document.getElementById("divisionSelect").value || "";
@@ -4064,8 +4064,7 @@
     report += "\n━━━━━━━━━━━━━━━━━━━━━\n";
     report += `【発信元】(株)NICヒアリング 中部エリア　報告者：${document.getElementById("userSelect").value}\n\n`;
     report += "本メールは《送信専用》稼働状況報告アプリより自動配信されております。\n";
-    report += "ご返信いただきましても応答致しかねますので、\n";
-    report += "お問い合わせは報告者まで直接ご連絡くださいますようお願い申し上げます。\n";
+    report += "ご不明な点・お問い合わせは、上記の報告者まで直接ご返信・ご連絡くださいますようお願い申し上げます。\n";
     report += "━━━━━━━━━━━━━━━━━━━━━\n";
 
     return report;
