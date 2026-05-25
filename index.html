@@ -2009,7 +2009,7 @@
   <!-- 本日の商談 -->
   <section class="section collapsed" id="sec-today">
     <div class="section-header" onclick="toggleSection('sec-today')">
-      <h2><span class="icon">▶</span>本日の商談</h2>
+      <h2><span class="icon">▶</span>本日の商談・結果</h2>
       <div class="count-badge"><span class="num" id="badge-today">0</span>件</div>
       <span class="toggle">▼</span>
     </div>
@@ -2373,6 +2373,7 @@
   ];
 
   const TODAY_CATS = [
+    { key: "karitori", label: "刈取結果", placeholder: "例：JAなごや 守山支店 田中様→XF960両耳 購入／鈴木様→返却" },
     { key: "soudan", label: "相談会", placeholder: "例：JAなごや 中川中部支店 山田様→4/13再訪" },
     { key: "jsho", label: "JA紹介", placeholder: "" },
     { key: "kakusho", label: "客紹介", placeholder: "" },
@@ -3731,7 +3732,7 @@
     report += `《生協》　合計商談 ${formatNumDisplay(seikyoSum)}件 (新規${formatNumDisplay(seikyoShinki)}件、リピート${formatNumDisplay(seikyoRepeat)}件、その他${formatNumDisplay(seikyoOther)}件)\n`;
     report += `  相談会 ${vd("seikyo-soudan")}　返信 ${vd("seikyo-henshin")}　問合 ${vd("seikyo-toiawase")}　${seikyoJshoLabel} ${vd("seikyo-jsho")}　客紹 ${vd("seikyo-kakusho")}　追買 ${vd("seikyo-tsuikai")}　SO ${vd("seikyo-so")}　その他 ${vd("seikyo-other")}件\n\n`;
 
-    report += "【本日の商談】\n";
+    report += "【本日の商談・結果】\n";
     report += "───────\n";
     // 全カテゴリのアイテム集計
     const todayItemsByCategory = TODAY_CATS.map(cat => ({
