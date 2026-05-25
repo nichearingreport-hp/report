@@ -3697,7 +3697,7 @@
     const mTotal = (key, todayId) => {
       const today = pv(todayId);
       const total = (perfMonthlyBase[key] || 0) + today;
-      return `${formatNumDisplay(total)}(${formatNumDisplay(today)})`;
+      return `${formatNumDisplay(total)} (${formatNumDisplay(today)})`;
     };
     report += "【月内累計】（=日報数値）　※( )内は本日分※\n";
     report += "───────\n";
