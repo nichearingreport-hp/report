@@ -2723,9 +2723,9 @@
         const cls = RESULT_COLOR_CLASS[resultVal];
         if (cls) div.classList.add(cls);
       }
-      // 契約マーク（🔴）の表示
+      // 契約マーク（⭕️）の表示
       const mark = div.querySelector(".result-mark");
-      if (mark) mark.textContent = (resultVal === "契約") ? "🔴" : "";
+      if (mark) mark.textContent = (resultVal === "契約") ? "⭕️" : "";
     }
     // プルダウン変更で色付け＆再集計
     div.querySelectorAll(".list-dropdown").forEach(sel => {
