@@ -3868,7 +3868,7 @@
           tags.push(v);
         }
       });
-      const tagStr = tags.length > 0 ? `[${tags.join("/")}] ` : "";
+      const tagStr = tags.length > 0 ? tags.map(t => `[${t}]`).join("") + " " : "";
       // ※の後ろ、または先頭にタグを付与
       if (cleaned.startsWith("※")) {
         return `※${tagStr}${cleaned.slice(1).trim()}`;
