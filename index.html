@@ -451,6 +451,12 @@
     letter-spacing: 0.02em;
     line-height: 1.4;
   }
+  /* 強調版（目立つカラー） */
+  .sales-notice-strong {
+    background: var(--fuchsia);
+    color: #FFFFFF;
+    border-left: 4px solid var(--navy);
+  }
 
   /* 実績件数セクション */
   .perf-section {
@@ -1190,14 +1196,6 @@
     gap: 6px;
     align-items: flex-start;
   }
-  .list-item.success {
-    border-left-color: var(--fuchsia);
-    background: #FFF0F8;
-  }
-  .list-item.so {
-    border-left-color: var(--gray);
-    background: var(--light-gray);
-  }
   .list-item .seq-num {
     font-weight: 700;
     color: var(--navy);
@@ -1207,21 +1205,49 @@
     margin-top: 4px;
     font-family: "SF Mono", monospace;
   }
-  .list-item.success .seq-num { color: var(--fuchsia); }
+  .list-item.res-keiyaku {   /* 契約・未計上 → 薄ピンク */
+    border-left-color: var(--fuchsia);
+    background: #FFF0F8;
+  }
+  .list-item.res-green {     /* 再訪・貸出 → 薄グリーン */
+    border-left-color: #4CAF7D;
+    background: #EAF7EF;
+  }
+  .list-item.res-gray {      /* SO → 薄グレー */
+    border-left-color: var(--gray);
+    background: var(--light-gray);
+  }
+  .list-item.res-beige {     /* 検討/後追・他 → ベージュ */
+    border-left-color: #C9A86A;
+    background: #F7F1E4;
+  }
+  .list-item.res-none {      /* 未選択 → 識別カラー（黄色系で目立たせる） */
+    border-left-color: #F5A623;
+    background: #FFF8E8;
+  }
+  .list-item.res-keiyaku .seq-num { color: var(--fuchsia); }
+  .list-item .result-mark {
+    font-size: 13px;
+    margin-top: 4px;
+    flex-shrink: 0;
+    min-width: 0;
+  }
   .list-item textarea {
     flex: 1;
-    border: none;
-    background: transparent;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: var(--white);
     font-family: inherit;
     font-size: 13px;
     line-height: 1.5;
     resize: none;
     min-height: 38px;
-    padding: 2px 4px;
+    padding: 4px 6px;
+    border-radius: 4px;
   }
   .list-item textarea:focus {
     outline: none;
     background: var(--white);
+    border-color: var(--turquoise);
     border-radius: 4px;
   }
   .list-item textarea::placeholder {
@@ -1920,8 +1946,17 @@
       <h2><span class="sales-icon">💎</span>現在の売上</h2>
     </div>
     <div class="section-body sales-body" style="display: block;">
-      <div class="sales-notice">⚠『現在の売上』の数値は独立している為、上部の『客数報告（当日分の数値）』とは連動していません。</div>
+      <div class="sales-notice sales-notice-strong">⚠『現在の売上』の数値は独立しています。上部の『客数報告（当日分）』とは連動しません。</div>
       <div class="sales-grid">
+        <div class="sales-item">
+          <label>前月繰越</label>
+          <div class="num-stepper sales-stepper">
+            <button type="button" class="stepper-btn minus" onclick="stepInput(this,-1)">−</button>
+            <input type="number" id="sales-prev-carry" value="0" inputmode="numeric">
+            <button type="button" class="stepper-btn plus" onclick="stepInput(this,1)">＋</button>
+          </div>
+          <span class="sales-unit">台</span>
+        </div>
         <div class="sales-item">
           <label>今月JA</label>
           <div class="num-stepper sales-stepper">
@@ -2084,8 +2119,8 @@
     <div class="section-body">
       <div class="warning-note">
         <div class="warning-text">
-          <span class="line1">契約には<span class="pink-tag">『契約』</span>または<span class="pink-tag">『成約』</span>、商談アウトには<span class="gray-tag">『SO』</span>の文言を必ず明記する</span>
-          <span class="line2">※入力時に自動で色付けされます（契約/成約→薄ピンク、アウト/SO→薄グレー）</span>
+          <span class="line1">各案件の右端の<span class="pink-tag">結果プルダウン</span>を必ず選択する（契約・再訪・貸出・SO・検討/後追・未計上・他）</span>
+          <span class="line2">※結果で自動色付け。未選択は黄色で表示／メールは契約[⭕️]等で表記</span>
         </div>
       </div>
       <div id="raijo-pref-blocks"></div>
@@ -2112,8 +2147,8 @@
     <div class="section-body">
       <div class="warning-note">
         <div class="warning-text">
-          <span class="line1">契約には<span class="pink-tag">『契約』</span>または<span class="pink-tag">『成約』</span>、商談アウトには<span class="gray-tag">『SO』</span>の文言を必ず明記する</span>
-          <span class="line2">※入力時に自動で色付けされます（契約/成約→薄ピンク、アウト/SO→薄グレー）</span>
+          <span class="line1">各案件の右端の<span class="pink-tag">結果プルダウン</span>を必ず選択する（契約・再訪・貸出・SO・検討/後追・未計上・他）</span>
+          <span class="line2">※結果で自動色付け。未選択は黄色で表示／メールは契約[⭕️]等で表記</span>
         </div>
       </div>
 
@@ -2175,8 +2210,8 @@
     <div class="section-body">
       <div class="warning-note">
         <div class="warning-text">
-          <span class="line1">契約には<span class="pink-tag">『契約』</span>または<span class="pink-tag">『成約』</span>、商談アウトには<span class="gray-tag">『SO』</span>の文言を必ず明記する</span>
-          <span class="line2">※入力時に自動で色付けされます(契約/成約→薄ピンク、アウト/SO→薄グレー)</span>
+          <span class="line1">各案件の右端の<span class="pink-tag">結果プルダウン</span>を必ず選択する（契約・再訪・貸出・SO・検討/後追・未計上・他）</span>
+          <span class="line2">※結果で自動色付け。未選択は黄色で表示／メールは契約[⭕️]等で表記</span>
         </div>
       </div>
 
@@ -2581,27 +2616,52 @@
 
   // ===== リスト項目 =====
   // カテゴリ別のプルダウン定義
+  // 案件結果プルダウンの選択肢（先頭の空＝未選択）
+  const RESULT_OPTIONS = ["", "契約", "再訪", "貸出", "SO", "検討/後追", "未計上", "他"];
+  const RESULT_DROPDOWN = { name: "result", options: RESULT_OPTIONS };
+
   const LIST_CATEGORY_DROPDOWNS = {
     raijo: [
-      { name: "venue", options: ["", "サポ会場"] },
-      { name: "apo", options: ["", "サポAPO"] }
+      { name: "apo", options: ["", "サポAPO"] },
+      RESULT_DROPDOWN
     ],
     raijoSeikyo: [
-      { name: "venue", options: ["", "サポ会場"] },
-      { name: "apo", options: ["", "サポAPO"] }
+      { name: "apo", options: ["", "サポAPO"] },
+      RESULT_DROPDOWN
     ],
     jaSyokai: [
-      { name: "kind", options: ["JA紹介", "客紹介"] }
+      { name: "kind", options: ["JA紹介", "客紹介"] },
+      RESULT_DROPDOWN
+    ],
+    jaPlain: [
+      RESULT_DROPDOWN
     ],
     seikyoSyokai: [
-      { name: "kind", options: ["客紹介", "生協紹"] }
+      { name: "kind", options: ["客紹介", "生協紹"] },
+      RESULT_DROPDOWN
+    ],
+    seikyoPlain: [
+      RESULT_DROPDOWN
     ],
     jaSP: [
-      { name: "kind", options: ["SP紹", "担当紹", "他"] }
+      { name: "kind", options: ["SP紹", "担当紹", "他"] },
+      RESULT_DROPDOWN
     ],
     seikyoSP: [
-      { name: "kind", options: ["SP紹", "担当紹", "他"] }
+      { name: "kind", options: ["SP紹", "担当紹", "他"] },
+      RESULT_DROPDOWN
     ]
+  };
+
+  // 結果値 → CSSクラス（色分け）
+  const RESULT_COLOR_CLASS = {
+    "契約": "res-keiyaku",      // 薄ピンク
+    "再訪": "res-green",        // 薄グリーン
+    "貸出": "res-green",        // 薄グリーン
+    "SO": "res-gray",           // 薄グレー
+    "検討/後追": "res-beige",   // ベージュ
+    "未計上": "res-keiyaku",    // 薄ピンク
+    "他": "res-beige"           // ベージュ
   };
 
   // カテゴリ別のプレースホルダー（例文）
@@ -2638,6 +2698,7 @@
 
     div.innerHTML = `
       ${showSeq ? '<span class="seq-num"></span>' : ''}
+      <span class="result-mark"></span>
       ${dropdownsHtml}
       <textarea placeholder="${placeholder}">${text}</textarea>
       <button class="delete-btn" onclick="removeListItem(this)">×</button>
@@ -2646,25 +2707,35 @@
     textarea.addEventListener("input", function() {
       this.style.height = "auto";
       this.style.height = (this.scrollHeight) + "px";
-      const t = this.value;
-      div.classList.remove("success", "so");
-      // 契約/成約/⭕ → ピンク
-      if (t.includes("契約") || t.includes("成約") || t.includes("⭕")) {
-        div.classList.add("success");
-      }
-      // アウト/SO → グレー
-      else if (t.includes("アウト") || t.match(/SO|[Ss]o(?![a-z])/)) {
-        div.classList.add("so");
-      }
       renumberAll();
       updateAllCounts();
     });
-    // プルダウン変更で再集計
+    // 結果プルダウンの値で色付け＆赤〇表示を更新
+    function applyResultStyle() {
+      const resultSel = div.querySelector('.list-dropdown[data-name="result"]');
+      const resultVal = resultSel ? resultSel.value : "";
+      // 色クラスをリセット
+      div.classList.remove("res-keiyaku", "res-green", "res-gray", "res-beige", "res-none");
+      if (!resultVal) {
+        // 未選択 → 識別カラー
+        div.classList.add("res-none");
+      } else {
+        const cls = RESULT_COLOR_CLASS[resultVal];
+        if (cls) div.classList.add(cls);
+      }
+      // 契約マーク（🔴）の表示
+      const mark = div.querySelector(".result-mark");
+      if (mark) mark.textContent = (resultVal === "契約") ? "🔴" : "";
+    }
+    // プルダウン変更で色付け＆再集計
     div.querySelectorAll(".list-dropdown").forEach(sel => {
       sel.addEventListener("change", () => {
+        applyResultStyle();
         updateAllCounts();
       });
     });
+    // 初期表示時にも色付けを適用
+    applyResultStyle();
     setTimeout(() => {
       textarea.style.height = "auto";
       textarea.style.height = (textarea.scrollHeight) + "px";
@@ -3240,11 +3311,13 @@
     if (!prev.sameMonth) {
       document.querySelectorAll("input[data-key]").forEach(i => i.value = 0);
     }
-    // 現在の売上（今月は月跨ぎでリセット、来月繰越は引き継ぎ）
-    const sales = prev.sales || { thisJA: 0, thisSeikyo: 0, nextMonth: 0 };
+    // 現在の売上（今月は月跨ぎでリセット、前月繰越・来月繰越は引き継ぎ）
+    const sales = prev.sales || { prevCarry: 0, thisJA: 0, thisSeikyo: 0, nextMonth: 0 };
+    const elPv = document.getElementById("sales-prev-carry");
     const elJA = document.getElementById("sales-this-ja");
     const elSk = document.getElementById("sales-this-seikyo");
     const elNx = document.getElementById("sales-next-month");
+    if (elPv) elPv.value = Number(sales.prevCarry) || 0;
     if (elJA) elJA.value = Number(sales.thisJA) || 0;
     if (elSk) elSk.value = Number(sales.thisSeikyo) || 0;
     if (elNx) elNx.value = Number(sales.nextMonth) || 0;
@@ -3414,7 +3487,7 @@
   function resetAllInputs() {
     document.querySelectorAll("input[data-key]").forEach(i => i.value = 0);
     [
-      "sales-this-ja", "sales-this-seikyo", "sales-next-month",
+      "sales-prev-carry", "sales-this-ja", "sales-this-seikyo", "sales-next-month",
       "perf-kyaku-total", "perf-kyaku-new",
       "perf-shodan-total", "perf-shodan-new",
       "perf-shicho-total", "perf-shicho-new",
@@ -3709,10 +3782,11 @@
     report += `納品    総合計 ${mTotal("nohinTotal","perf-nohin-total")}  /  新規 ${mTotal("nohinNew","perf-nohin-new")}　※日報非反映・報告漏れ確認用※\n\n`;
 
     // 現在の売上
+    const salesPrevCarry = parseInt(document.getElementById("sales-prev-carry").value) || 0;
     const salesJA = parseInt(document.getElementById("sales-this-ja").value) || 0;
     const salesSeikyo = parseInt(document.getElementById("sales-this-seikyo").value) || 0;
     const salesNext = parseInt(document.getElementById("sales-next-month").value) || 0;
-    report += `【現在の売上】 今月JA ${formatNumDisplay(salesJA)}台、生協 ${formatNumDisplay(salesSeikyo)}台 / 来月繰越 ${formatNumDisplay(salesNext)}台\n`;
+    report += `【現在の売上】 前月繰越 ${formatNumDisplay(salesPrevCarry)}台 / 今月JA ${formatNumDisplay(salesJA)}台、生協 ${formatNumDisplay(salesSeikyo)}台 / 来月繰越 ${formatNumDisplay(salesNext)}台\n`;
     report += "───────\n\n";
 
     const aichiPref = document.getElementById("aichi-pref-select").value;
@@ -3786,14 +3860,20 @@
       const tags = [];
       dropdowns.forEach(sel => {
         const v = sel.value.trim();
-        if (v) tags.push(v);
+        if (!v) return;
+        if (sel.dataset.name === "result" && v === "契約") {
+          // 結果プルダウンの「契約」は ⭕️ に変換してタグ表示
+          tags.push("⭕️");
+        } else {
+          tags.push(v);
+        }
       });
-      if (tags.length === 0) return cleaned;
+      const tagStr = tags.length > 0 ? `[${tags.join("/")}] ` : "";
       // ※の後ろ、または先頭にタグを付与
       if (cleaned.startsWith("※")) {
-        return `※[${tags.join("/")}] ${cleaned.slice(1).trim()}`;
+        return `※${tagStr}${cleaned.slice(1).trim()}`;
       }
-      return `[${tags.join("/")}] ${cleaned}`;
+      return `${tagStr}${cleaned}`;
     };
 
     const collectPrefBlocks = (sectionType) => {
@@ -4216,6 +4296,7 @@
 
     // 現在の売上
     const sales = {
+      prevCarry: parseInt(document.getElementById("sales-prev-carry").value) || 0,
       thisJA: parseInt(document.getElementById("sales-this-ja").value) || 0,
       thisSeikyo: parseInt(document.getElementById("sales-this-seikyo").value) || 0,
       nextMonth: parseInt(document.getElementById("sales-next-month").value) || 0
