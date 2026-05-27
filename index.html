@@ -2640,7 +2640,7 @@
   // ===== リスト項目 =====
   // カテゴリ別のプルダウン定義
   // 案件結果プルダウンの選択肢（先頭の空＝未選択）
-  const RESULT_OPTIONS = ["", "契約", "再訪", "貸出", "SO", "検討/後追", "未計上", "他"];
+  const RESULT_OPTIONS = ["", "APOｷｬﾝ", "契約", "再訪", "貸出", "SO", "保留/後追", "未計上", "ｷｬﾝｾﾙ", "他"];
   const RESULT_DROPDOWN = { name: "result", options: RESULT_OPTIONS };
 
   const LIST_CATEGORY_DROPDOWNS = {
@@ -2678,12 +2678,14 @@
 
   // 結果値 → CSSクラス（色分け）
   const RESULT_COLOR_CLASS = {
+    "APOｷｬﾝ": "res-gray",      // 薄グレー
     "契約": "res-keiyaku",      // 薄ピンク
     "再訪": "res-green",        // 薄グリーン
     "貸出": "res-green",        // 薄グリーン
     "SO": "res-gray",           // 薄グレー
-    "検討/後追": "res-beige",   // ベージュ
+    "保留/後追": "res-beige",   // ベージュ
     "未計上": "res-keiyaku",    // 薄ピンク
+    "ｷｬﾝｾﾙ": "res-gray",        // 薄グレー
     "他": "res-beige"           // ベージュ
   };
 
