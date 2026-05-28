@@ -2340,7 +2340,7 @@
   // ==========================================================
   //  アプリ バージョン（更新時はここの数字だけ変える）
   // ==========================================================
-  const APP_VERSION = "HYSDR7.0.3";
+  const APP_VERSION = "HYSDR7.1.0";
 
   // ==========================================================
   //  GAS連携設定
@@ -3669,7 +3669,9 @@
 
     try {
       console.log("[起動] GAS呼び出し開始: " + GAS_URL);
-      const result = await gasGet({ action: "init" });
+      const areaForInit = document.getElementById("areaSelect").value || "";
+      const divisionForInit = document.getElementById("divisionSelect").value || "";
+      const result = await gasGet({ action: "init", area: areaForInit, division: divisionForInit });
       console.log("[起動] GAS応答:", result);
 
       if (result && result.success) {
