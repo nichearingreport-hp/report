@@ -310,6 +310,145 @@
     width: 100%;
     margin-top: 4px;
   }
+  /* === v8.2.3: 契約・契約(助成) 合計表示（count-badgeと統一デザイン・色違い） === */
+  .keiyaku-summary {
+    background: #F03747;
+    color: var(--white);
+    padding: 3px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .keiyaku-summary-title {
+    font-weight: 600;
+    color: var(--white);
+  }
+  .keiyaku-summary-num {
+    font-weight: 700;
+    color: var(--white);
+    font-size: 14px;
+  }
+
+  /* === v8.2.3: 8枠スロット仕様 === */
+  .recipient-counter {
+    text-align: right;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    margin: 4px 2px 8px 2px;
+  }
+  .recipient-counter.warn { color: #F03747; }
+  .recipient-counter.full { color: #C00000; font-weight: 700; }
+  
+  .recipient-item.slot-locked input[type="email"] {
+    background: #FCE4E8;
+    color: #555;
+    cursor: not-allowed;
+  }
+  .recipient-item.slot-locked .delete-btn,
+  .recipient-item.slot-locked .slot-edit-btn { display: none; }
+  
+  .recipient-item.slot-deletable input[type="email"] {
+    background: #FFF8E1;
+  }
+  .recipient-item.slot-empty input[type="email"] {
+    background: #F0F0F0;
+    color: #AAA;
+    font-style: italic;
+  }
+  
+  .slot-label {
+    display: inline-block;
+    min-width: 88px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #F03747;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    margin-right: 6px;
+  }
+  .slot-label.locked { background: #1F4E79; }
+  .slot-label.deletable { background: #E65100; }
+  .slot-label.adhoc { background: #36A7A4; }
+  
+  .recipient-limit-msg {
+    background: #F03747;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 8px;
+    display: none;
+  }
+  .recipient-limit-msg.show { display: block; }
+  
+  /* 警告モーダル */
+  .warn-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .warn-modal-overlay.show { display: flex; }
+  .warn-modal {
+    background: #F03747;
+    color: #fff;
+    border-radius: 12px;
+    max-width: 420px;
+    width: 90%;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  .warn-modal h3 {
+    font-size: 18px;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+  }
+  .warn-modal p {
+    font-size: 14px;
+    margin: 0 0 18px 0;
+    line-height: 1.6;
+  }
+  .warn-modal .btn-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .warn-modal .btn-row button {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    max-width: 160px;
+  }
+  .warn-modal .btn-cancel {
+    background: #fff;
+    color: #F03747;
+  }
+  .warn-modal .btn-confirm {
+    background: #1F4E79;
+    color: #fff;
+  }
+
 
   .section {
     background: var(--white);
@@ -2198,6 +2337,10 @@
   <section class="section collapsed" id="sec-raijo">
     <div class="section-header" onclick="toggleSection('sec-raijo')">
       <h2><span class="icon">▶</span>新規---来場<span class="inherit-badge">前日引継</span></h2>
+      <div class="keiyaku-summary">
+        <span class="keiyaku-summary-title">来場 合計：</span>
+        <span class="keiyaku-summary-num" id="keiyaku-sum-raijo-all">契約0件（内助成0件）</span>
+      </div>
       <div class="count-badge">JA※<span class="num" id="badge-raijo-ast">0</span>件・JA今月<span class="num" id="badge-raijo">0</span>件<span class="meet-support-badge">（内サポAPO　<span id="badge-raijo-support">0</span>件）</span></div>
       <span class="toggle">▼</span>
     </div>
@@ -2226,6 +2369,10 @@
   <section class="section collapsed" id="sec-resp">
     <div class="section-header" onclick="toggleSection('sec-resp')">
       <h2><span class="icon">▶</span>JA《新規》---返信・問合・紹介・他<span class="inherit-badge">前日引継</span></h2>
+      <div class="keiyaku-summary">
+        <span class="keiyaku-summary-title">JA新規 合計：</span>
+        <span class="keiyaku-summary-num" id="keiyaku-sum-resp">契約0件（内助成0件）</span>
+      </div>
       <div class="count-badge">JA※<span class="num" id="badge-resp-ast">0</span>件・JA今月<span class="num" id="badge-resp">0</span>件</div>
       <span class="toggle">▼</span>
     </div>
@@ -2289,6 +2436,10 @@
   <section class="section collapsed" id="sec-sresp">
     <div class="section-header" onclick="toggleSection('sec-sresp')">
       <h2><span class="icon">▶</span>生協《新規》---返信・問合・紹介・他<span class="inherit-badge">前日引継</span></h2>
+      <div class="keiyaku-summary">
+        <span class="keiyaku-summary-title">生協新規 合計：</span>
+        <span class="keiyaku-summary-num" id="keiyaku-sum-sresp">契約0件（内助成0件）</span>
+      </div>
       <div class="count-badge">JA※<span class="num" id="badge-sresp-ast">0</span>件・JA今月<span class="num" id="badge-sresp">0</span>件</div>
       <span class="toggle">▼</span>
     </div>
@@ -2368,24 +2519,41 @@
   <button class="send-btn" onclick="sendReport()">📩 送信</button>
 </div>
 
-<!-- 送信先設定モーダル -->
+<!-- 送信先設定モーダル v8.2.3 -->
 <div class="modal-overlay" id="recipientsModal">
   <div class="modal">
     <div class="modal-header">
-      <h3>📧 送信先メールアドレス設定</h3>
+      <h3>📧 送信先メールアドレス設定（最大7名まで）</h3>
       <button class="modal-close" onclick="closeRecipientsModal()">×</button>
     </div>
     <div class="recipients-modal-body">
       <div class="recipients-help">
-        報告書を送信するメールアドレスを設定します。<br>
-        複数の送信先を追加できます。設定内容は端末に保存されます。
+        報告書の送信先です。<br>
+        ① AMG ② 上長 ③ フジ ④ サポ ⑤ 本人iPad ⑥ 本人携帯 は自動でセットされます。<br>
+        ③フジ・⑥携帯 は警告のうえ削除可能。⑦ は自由に追加できます。
       </div>
+      <div class="recipient-counter" id="recipientCounter">0 / 7 名</div>
       <div id="recipientsList"></div>
-      <button class="add-recipient-btn" onclick="addRecipientField()">＋ 送信先を追加</button>
+      <button class="add-recipient-btn" id="addRecipientBtn" onclick="addRecipientField()">＋ 送信先を追加</button>
+      <div class="recipient-limit-msg" id="recipientLimitMsg">
+        ⚠ 上限7名に達しました（送信枠の負担軽減のため）
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeRecipientsModal()">キャンセル</button>
       <button class="btn-primary" onclick="saveRecipients()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- v8.2.3: 警告モーダル（汎用） -->
+<div class="warn-modal-overlay" id="genericWarnModal">
+  <div class="warn-modal">
+    <h3 id="warnModalTitle">⚠ 確認</h3>
+    <p id="warnModalBody">本当に実行しますか？</p>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeWarnModal(false)">キャンセル</button>
+      <button class="btn-confirm" onclick="closeWarnModal(true)">実行する</button>
     </div>
   </div>
 </div>
@@ -2413,7 +2581,7 @@
   // ==========================================================
   //  アプリ バージョン（更新時はここの数字だけ変える）
   // ==========================================================
-  const APP_VERSION = "HYSDR7.5.7";
+  const APP_VERSION = "HYSDR8.2.3";
 
   // ==========================================================
   //  v7.5.5: 入力内容の上書き事故防止ガード
@@ -2725,8 +2893,47 @@
     lastScrollY = sy;
   }, { passive: true });
 
-  // ===== 送信先管理 =====
+  // ===== 送信先管理 v8.2.3 =====
   let recipients = [];
+  // スロット情報（インデックスは0始まり、表示は1始まり）
+  // type: 'amg' | 'leader' | 'fuji' | 'sup' | 'ipad' | 'mobile' | 'adhoc'
+  // locked: trueなら削除不可、deletable: trueなら警告つき削除可
+  let recipientSlots = [];
+  const MAX_SLOTS = 7;
+  
+  // 警告モーダル（Promise版）
+  let _warnResolve = null;
+  function showWarnModal(title, body) {
+    document.getElementById('warnModalTitle').textContent = title;
+    document.getElementById('warnModalBody').innerHTML = body;
+    document.getElementById('genericWarnModal').classList.add('show');
+    return new Promise(resolve => { _warnResolve = resolve; });
+  }
+  function closeWarnModal(ok) {
+    document.getElementById('genericWarnModal').classList.remove('show');
+    if (_warnResolve) { _warnResolve(ok); _warnResolve = null; }
+  }
+  
+  function buildSlotsFromUserInfo(userInfo) {
+    // userInfo に新フィールドがあればそれを使用、なければ recipients をそのまま採用
+    const slots = [];
+    if (userInfo && userInfo.slots && Array.isArray(userInfo.slots)) {
+      // GAS側で構築済みのスロットを使用
+      return userInfo.slots.slice(0, MAX_SLOTS);
+    }
+    // 後方互換：recipients配列を使用（旧仕様）
+    const list = (userInfo && userInfo.recipients) ? userInfo.recipients : [];
+    list.slice(0, MAX_SLOTS).forEach((addr, i) => {
+      slots.push({
+        type: 'adhoc',
+        label: '宛先' + (i+1),
+        addr: addr,
+        locked: false,
+        deletable: true,
+      });
+    });
+    return slots;
+  }
 
   // 注：loadRecipients()は applyUserInfo() で代替されるため未使用化
   // 以前のwindow.storageベースから、社員マスタ参照型に移行
@@ -2746,13 +2953,7 @@
   }
 
   function openRecipientsModal() {
-    const list = document.getElementById("recipientsList");
-    list.innerHTML = "";
-    if (recipients.length === 0) {
-      addRecipientField();
-    } else {
-      recipients.forEach(email => addRecipientField(email));
-    }
+    renderRecipientsList();
     document.getElementById("recipientsModal").classList.add("show");
   }
 
@@ -2760,26 +2961,145 @@
     document.getElementById("recipientsModal").classList.remove("show");
   }
 
-  function addRecipientField(email = "") {
+  // v8.2.3: スロット一覧をレンダリング
+  function renderRecipientsList() {
     const list = document.getElementById("recipientsList");
-    const div = document.createElement("div");
-    div.className = "recipient-item";
-    div.innerHTML = `
-      <input type="email" placeholder="例：sample@example.com" value="${email}">
-      <button class="delete-btn" onclick="this.parentElement.remove()">×</button>
-    `;
-    list.appendChild(div);
-    if (!email) div.querySelector("input").focus();
+    list.innerHTML = "";
+    
+    recipientSlots.forEach((slot, idx) => {
+      const div = document.createElement("div");
+      let cls = "recipient-item";
+      if (slot.locked) cls += " slot-locked";
+      else if (slot.deletable) cls += " slot-deletable";
+      if (!slot.addr) cls += " slot-empty";
+      div.className = cls;
+      
+      let labelClass = "slot-label adhoc";
+      if (slot.locked) labelClass = "slot-label locked";
+      else if (slot.deletable) labelClass = "slot-label deletable";
+      
+      const idxNum = idx + 1;
+      const labelTxt = slot.label || ('宛先' + idxNum);
+      const placeholder = slot.locked ? '（自動セット）' : '例：sample@example.com';
+      const inputAttrs = slot.locked ? 'readonly' : '';
+      const addr = slot.addr || '';
+      
+      div.innerHTML =
+        '<span class="slot-label ' + (slot.locked ? 'locked' : (slot.deletable ? 'deletable' : 'adhoc')) + '">' +
+        idxNum + '. ' + labelTxt + '</span>' +
+        '<input type="email" placeholder="' + placeholder + '" value="' + addr.replace(/"/g, '&quot;') + '" ' + inputAttrs + ' data-slot-idx="' + idx + '">' +
+        (slot.locked ? '' : '<button class="delete-btn" onclick="onSlotDelete(' + idx + ')">×</button>');
+      
+      list.appendChild(div);
+    });
+    
+    updateRecipientCounter();
   }
 
+  function updateRecipientCounter() {
+    const counter = document.getElementById("recipientCounter");
+    const limitMsg = document.getElementById("recipientLimitMsg");
+    const addBtn = document.getElementById("addRecipientBtn");
+    
+    const filled = recipientSlots.filter(s => s.addr).length;
+    const total = recipientSlots.length;
+    counter.textContent = filled + ' / ' + MAX_SLOTS + ' 名';
+    counter.className = 'recipient-counter';
+    if (total >= 6) counter.classList.add('warn');
+    if (total >= MAX_SLOTS) counter.classList.add('full');
+    
+    // 8枠目に達したら＋追加ボタン非表示、メッセージ表示
+    if (total >= MAX_SLOTS) {
+      addBtn.style.display = 'none';
+      limitMsg.classList.add('show');
+    } else {
+      addBtn.style.display = '';
+      limitMsg.classList.remove('show');
+    }
+  }
+
+  // スロット削除（×ボタン）
+  async function onSlotDelete(idx) {
+    const slot = recipientSlots[idx];
+    if (!slot) return;
+    if (slot.locked) {
+      showToast('このスロットは削除できません');
+      return;
+    }
+    
+    // 警告つきスロットの場合
+    if (slot.deletable && slot.addr) {
+      let title = '⚠ この宛先を削除します';
+      let body = '本当に削除しますか？';
+      if (slot.type === 'fuji') {
+        body = 'フジ取引先へメールが届かなくなります<br>本当に削除しますか？';
+      } else if (slot.type === 'ipad') {
+        body = '本人のiPadにメールが届かなくなります<br>本当に削除しますか？';
+      } else if (slot.type === 'mobile') {
+        body = '本人の携帯にメールが届かなくなります<br>本当に削除しますか？';
+      }
+      const ok = await showWarnModal(title, body);
+      if (!ok) return;
+    }
+    
+    // ad-hoc（自由入力）はそのまま削除
+    recipientSlots.splice(idx, 1);
+    renderRecipientsList();
+  }
+
+  // 宛先追加（＋ボタン）
+  async function addRecipientField(email = "") {
+    if (recipientSlots.length >= MAX_SLOTS) {
+      showToast('上限7名に達しています');
+      return;
+    }
+    // Pattern B: 7枠目入力後、＋追加押下時に警告（つまり8枠目を作る瞬間）
+    if (recipientSlots.length === 6) {
+      const ok = await showWarnModal(
+        '⚠ 7人目を追加します',
+        '送信枠の負担が増え送信エラーのリスクになります<br>本当に追加しますか？'
+      );
+      if (!ok) return;
+    }
+    
+    recipientSlots.push({
+      type: 'adhoc',
+      label: '宛先' + (recipientSlots.length + 1),
+      addr: email,
+      locked: false,
+      deletable: false,  // ad-hocは普通に削除可（警告なし）
+    });
+    renderRecipientsList();
+    // 新規追加した入力欄にフォーカス
+    setTimeout(() => {
+      const inputs = document.querySelectorAll("#recipientsList input[type='email']");
+      if (inputs.length > 0 && !email) {
+        const last = inputs[inputs.length - 1];
+        last.focus();
+      }
+    }, 50);
+  }
+
+  // 入力変更を recipientSlots に反映
+  document.addEventListener('input', function(e) {
+    if (e.target && e.target.matches('#recipientsList input[type="email"]')) {
+      const idx = parseInt(e.target.dataset.slotIdx, 10);
+      if (!isNaN(idx) && recipientSlots[idx]) {
+        if (recipientSlots[idx].locked) return;
+        recipientSlots[idx].addr = e.target.value.trim();
+        updateRecipientCounter();
+      }
+    }
+  });
+
   async function saveRecipients() {
-    const inputs = document.querySelectorAll("#recipientsList input[type='email']");
+    // 全スロットからアドレスを収集
     const newRecipients = [];
-    for (const input of inputs) {
-      const v = input.value.trim();
+    for (const slot of recipientSlots) {
+      const v = (slot.addr || '').trim();
       if (v) {
         if (!v.includes("@") || !v.includes(".")) {
-          showToast(`メールアドレスの形式が正しくありません：${v}`);
+          showToast('メールアドレスの形式が正しくありません：' + v);
           return;
         }
         newRecipients.push(v);
@@ -2863,7 +3183,7 @@
   // ===== リスト項目 =====
   // カテゴリ別のプルダウン定義
   // 案件結果プルダウンの選択肢（先頭の空＝未選択）
-  const RESULT_OPTIONS = ["", "契約", "再訪", "貸出", "SO", "アポCAN", "電話のみ", "保留/後追", "未計上", "CAN", "他"];
+  const RESULT_OPTIONS = ["", "契約", "契約(助成)", "再訪", "貸出", "SO", "アポCAN", "電話のみ", "保留/後追", "未計上", "CAN", "他"];
   const RESULT_DROPDOWN = { name: "result", options: RESULT_OPTIONS };
 
   const LIST_CATEGORY_DROPDOWNS = {
@@ -2902,6 +3222,7 @@
   // 結果値 → CSSクラス（色分け）
   const RESULT_COLOR_CLASS = {
     "契約": "res-keiyaku",      // 薄ピンク
+    "契約(助成)": "res-keiyaku", // 薄ピンク（v8.2.3）
     "再訪": "res-green",        // 薄グリーン
     "貸出": "res-green",        // 薄グリーン
     "SO": "res-gray",           // 薄グレー
@@ -2981,7 +3302,11 @@
       }
       // 契約マーク（⭕️）の表示
       const mark = div.querySelector(".result-mark");
-      if (mark) mark.textContent = (resultVal === "契約") ? "⭕️" : "";
+      if (mark) {
+        if (resultVal === "契約") mark.textContent = "⭕️";
+        else if (resultVal === "契約(助成)") mark.textContent = "⭕️(助)";
+        else mark.textContent = "";
+      }
     }
     // プルダウン変更で色付け＆再集計
     div.querySelectorAll(".list-dropdown").forEach(sel => {
@@ -3468,6 +3793,8 @@
       ["SP紹介", "担当者紹介", "他"]);
     // breakdown-raijo: 内サポAPO
     countRaijoBreakdown();
+    // v8.2.3: 契約・契約(助成) 件数の集計
+    updateKeiyakuSummaries();
 
     const stockCount = Array.from(document.querySelectorAll("#stock-list input"))
       .filter(i => i.value.trim().length > 0).length;
@@ -3510,6 +3837,66 @@
     const text = "（" + options.map((o, i) => `${labels[i]}${counts[o]}件`).join("、") + "）";
     const el = document.getElementById(breakdownId);
     if (el) el.textContent = text;
+  }
+
+  // v8.2.3: 契約・契約(助成) 件数を集計
+  function countKeiyakuInPrefBlocks(sectionType) {
+    let keiyaku = 0, jyosei = 0;
+    const container = document.getElementById(`${sectionType}-pref-blocks`);
+    if (container) {
+      container.querySelectorAll(".list-item").forEach(item => {
+        const ta = item.querySelector("textarea");
+        if (!ta || !ta.value.trim()) return;
+        const sel = item.querySelector('select[data-name="result"]');
+        if (!sel) return;
+        if (sel.value === "契約") keiyaku++;
+        else if (sel.value === "契約(助成)") jyosei++;
+      });
+    }
+    return { keiyaku, jyosei };
+  }
+  function countKeiyakuInList(listId) {
+    let keiyaku = 0, jyosei = 0;
+    const list = document.getElementById(listId);
+    if (list) {
+      list.querySelectorAll(".list-item").forEach(item => {
+        const ta = item.querySelector("textarea");
+        if (!ta || !ta.value.trim()) return;
+        const sel = item.querySelector('select[data-name="result"]');
+        if (!sel) return;
+        if (sel.value === "契約") keiyaku++;
+        else if (sel.value === "契約(助成)") jyosei++;
+      });
+    }
+    return { keiyaku, jyosei };
+  }
+  // v8.2.3: 新規来場・JA新規・生協新規 の合計表示を「契約N件（内助成M件）」に
+  function updateKeiyakuSummaries() {
+    // 来場 = JA + 生協 合算
+    const raijoStats = countKeiyakuInPrefBlocks("raijo");
+    const raijoSeikyoStats = countKeiyakuInList("raijo-seikyo-list");
+    const raijoTotal = raijoStats.keiyaku + raijoStats.jyosei + raijoSeikyoStats.keiyaku + raijoSeikyoStats.jyosei;
+    const raijoJyosei = raijoStats.jyosei + raijoSeikyoStats.jyosei;
+    const elRaijoAll = document.getElementById("keiyaku-sum-raijo-all");
+    if (elRaijoAll) elRaijoAll.textContent = `契約${raijoTotal}件（内助成${raijoJyosei}件）`;
+    
+    // JA新規（respH+respT+respJ+respS）
+    let jaK = 0, jaJ = 0;
+    ["respH", "respT", "respJ", "respS"].forEach(sec => {
+      const s = countKeiyakuInPrefBlocks(sec);
+      jaK += s.keiyaku; jaJ += s.jyosei;
+    });
+    const elJa = document.getElementById("keiyaku-sum-resp");
+    if (elJa) elJa.textContent = `契約${jaK + jaJ}件（内助成${jaJ}件）`;
+    
+    // 生協新規（srespH+srespT+srespJ+srespS）
+    let sK = 0, sJ = 0;
+    ["srespH-list", "srespT-list", "srespJ-list", "srespS-list"].forEach(listId => {
+      const s = countKeiyakuInList(listId);
+      sK += s.keiyaku; sJ += s.jyosei;
+    });
+    const elSresp = document.getElementById("keiyaku-sum-sresp");
+    if (elSresp) elSresp.textContent = `契約${sK + sJ}件（内助成${sJ}件）`;
   }
 
   // 新規来場：内サポAPO件数の集計
@@ -3755,12 +4142,15 @@
     return { text: txt.startsWith("※") ? txt.replace(/^※\s*/, "※") : txt, type };
   }
 
-  // ===== 社員情報（送信先メール）反映 =====
+  // ===== 社員情報（送信先メール）反映 v8.2.3 =====
   function applyUserInfo(userInfo) {
     if (!userInfo) {
       recipients = [];
+      recipientSlots = [];
     } else {
-      recipients = userInfo.recipients || [];
+      recipientSlots = buildSlotsFromUserInfo(userInfo);
+      // 互換のため recipients も同期
+      recipients = recipientSlots.filter(s => s.addr).map(s => s.addr);
     }
     updateRecipientsSummary();
   }
@@ -4206,6 +4596,9 @@
         if (sel.dataset.name === "result" && v === "契約") {
           // 結果プルダウンの「契約」は ⭕️ に変換してタグ表示
           tags.push("⭕️");
+        } else if (sel.dataset.name === "result" && v === "契約(助成)") {
+          // v8.2.3: 「契約(助成)」は ⭕(助) に変換
+          tags.push("⭕️(助)");
         } else {
           tags.push(v);
         }
@@ -4383,7 +4776,13 @@
       const seikyo = seikyoList ? collectStats(seikyoList, true) : { astTotal: 0, numTotal: 0, supportApo: 0 };
       return { ja, seikyo };
     })();
-    report += `【新規---来場】 JA※${raijoStats.ja.astTotal}件・JA今月${raijoStats.ja.numTotal}件（内サポAPO ${raijoStats.ja.supportApo}件）\n`;
+    // v8.2.3: 契約・契約(助成) 合計
+    const raijoKeiyakuJa = countKeiyakuInPrefBlocks("raijo");
+    const raijoKeiyakuSeikyo = countKeiyakuInList("raijo-seikyo-list");
+    // v8.2.3: 来場（JA+生協）契約合計
+    const raijoTotalAll = raijoKeiyakuJa.keiyaku + raijoKeiyakuJa.jyosei + raijoKeiyakuSeikyo.keiyaku + raijoKeiyakuSeikyo.jyosei;
+    const raijoJyoseiAll = raijoKeiyakuJa.jyosei + raijoKeiyakuSeikyo.jyosei;
+    report += `【新規---来場】 JA※${raijoStats.ja.astTotal}件・JA今月${raijoStats.ja.numTotal}件（内サポAPO ${raijoStats.ja.supportApo}件）／来場契約${raijoTotalAll}件（内助成${raijoJyoseiAll}件）\n`;
     report += "───────\n";
     const raijoData = collectPrefBlocks("raijo");
     raijoData.forEach(({pref, items}) => {
@@ -4398,6 +4797,12 @@
     report += "\n";
 
     // JA《新規》
+    // v8.2.3: 契約・契約(助成) 合計を追加
+    let jaKeiyaku = 0, jaJyosei = 0;
+    ["respH","respT","respJ","respS"].forEach(sec => {
+      const s = countKeiyakuInPrefBlocks(sec);
+      jaKeiyaku += s.keiyaku; jaJyosei += s.jyosei;
+    });
     report += "【JA《新規》---返信・問合・紹介・他】 " + (() => {
       const r1 = countTypes("respH");
       const r2 = countTypes("respT");
@@ -4405,7 +4810,7 @@
       const r4 = countTypes("respS");
       const ast = r1.asterisk + r2.asterisk + r3.asterisk + r4.asterisk;
       const num = r1.numbered + r2.numbered + r3.numbered + r4.numbered;
-      return `※${ast}件・今月${num}件`;
+      return `※${ast}件・今月${num}件／契約${jaKeiyaku + jaJyosei}件（内助成${jaJyosei}件）`;
     })() + "\n";
     report += "───────\n";
     const respSubs = [
@@ -4427,9 +4832,15 @@
     });
 
     // 生協《新規》
+    // v8.2.3: 契約・契約(助成) 合計を追加
+    let sKeiyaku = 0, sJyosei = 0;
+    ["srespH-list","srespT-list","srespJ-list","srespS-list"].forEach(listId => {
+      const s = countKeiyakuInList(listId);
+      sKeiyaku += s.keiyaku; sJyosei += s.jyosei;
+    });
     report += "【生協《新規》---返信・問合・紹介・他】 " + (() => {
       const r = countTypesList(["srespH-list", "srespT-list", "srespJ-list", "srespS-list"]);
-      return `※${r.asterisk}件・今月${r.numbered}件`;
+      return `※${r.asterisk}件・今月${r.numbered}件／契約${sKeiyaku + sJyosei}件（内助成${sJyosei}件）`;
     })() + "\n";
     report += "───────\n";
     const srespSubs2 = [
